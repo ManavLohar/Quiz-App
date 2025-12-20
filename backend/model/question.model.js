@@ -1,23 +1,15 @@
-import { Model, Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 
-const questionsSchema = new Schema([
-  {
-    question: {
-      type: String,
-      required: true,
-    },
-    options: [
-      {
-        option: {
-          type: String,
-        },
-      },
-    ],
-    correct_answer: {
-      type: String,
-      required: true,
-    },
+const questionSchema = new Schema({
+  question: {
+    type: String,
+    required: true,
   },
-]);
+  options: [String],
+  correct_answer: {
+    type: String,
+    required: true,
+  },
+});
 
-export const questionModel = new Model("Questions", questionsSchema);
+export const QuestionModel = new model("Question", questionSchema);
