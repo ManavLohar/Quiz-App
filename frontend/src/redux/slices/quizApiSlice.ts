@@ -4,12 +4,44 @@ export const quizApiSlice = createApi({
   reducerPath: "QuizApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:5000/",
+    credentials: "include",
   }),
-  tagTypes: ["Questions"],
+  tagTypes: [
+    "Questions",
+    "Admin",
+    "CandidateQuestions",
+    "TestHistory",
+    "GeneratedLinks",
+  ],
   endpoints: (builder) => ({
+    adminLogin: builder.mutation({
+      query: (data) => ({
+        url: "/admin/login",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Admin", "Questions"],
+    }),
+    getAdmin: builder.query({
+      query: () => "/admin",
+      providesTags: ["Admin"],
+    }),
+    logoutAdmin: builder.mutation({
+      query: () => ({
+        url: "/admin/logout",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["Admin"],
+    }),
     postQuestion: builder.mutation({
       query: (data) => ({
-        url: "/question",
+        url: "/admin/question",
         method: "POST",
         body: data,
         headers: {
@@ -19,12 +51,12 @@ export const quizApiSlice = createApi({
       invalidatesTags: ["Questions"],
     }),
     getQuestions: builder.query({
-      query: () => "/question",
-      providesTags: ["Questions"],
+      query: () => "/admin/questions",
+      providesTags: ["Questions", "Admin"],
     }),
     updateQuestion: builder.mutation({
       query: (data) => ({
-        url: "/question",
+        url: "/admin/question",
         method: "PATCH",
         body: data,
         headers: {
@@ -35,7 +67,7 @@ export const quizApiSlice = createApi({
     }),
     deleteQuestion: builder.mutation({
       query: (data) => ({
-        url: "/question",
+        url: "/admin/question",
         method: "DELETE",
         body: data,
         headers: {
@@ -44,12 +76,86 @@ export const quizApiSlice = createApi({
       }),
       invalidatesTags: ["Questions"],
     }),
+    generateTestLink: builder.mutation({
+      query: () => ({
+        url: "/admin/generate-test-link",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["GeneratedLinks"],
+    }),
+    getGeneratedTestLinks: builder.query({
+      query: () => "/admin/generated-test-link",
+      providesTags: ["GeneratedLinks"],
+    }),
+    deleteGeneratedTestLink: builder.mutation({
+      query: ({ testId }) => ({
+        url: `/admin/delete-generated-test-link/${testId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["GeneratedLinks", "TestHistory"],
+    }),
+    postCandidateName: builder.mutation({
+      query: (data) => ({
+        url: "/admin/candidate/name",
+        method: "POST",
+        body: data,
+        header: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["CandidateQuestions", "GeneratedLinks"],
+    }),
+    getQuestionsForCandidate: builder.query({
+      query: ({ adminId, testId }) =>
+        `/admin/questions/candidate/${adminId}/${testId}`,
+      providesTags: ["CandidateQuestions"],
+    }),
+    postCheckAnswer: builder.mutation({
+      query: (data) => ({
+        url: "/admin/check-answer",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["CandidateQuestions"],
+    }),
+    postSubmitTest: builder.mutation({
+      query: (data) => ({
+        url: "/admin/submit-test",
+        method: "POST",
+        body: data,
+        header: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["CandidateQuestions", "TestHistory", "GeneratedLinks"],
+    }),
+    getTestHistory: builder.query({
+      query: ({ testId }) => `/admin/test-history/${testId}`,
+      providesTags: ["TestHistory"],
+    }),
   }),
 });
 
 export const {
+  useAdminLoginMutation,
+  useGetAdminQuery,
+  useLogoutAdminMutation,
   usePostQuestionMutation,
   useGetQuestionsQuery,
   useUpdateQuestionMutation,
   useDeleteQuestionMutation,
+  useGenerateTestLinkMutation,
+  useGetGeneratedTestLinksQuery,
+  useDeleteGeneratedTestLinkMutation,
+  usePostCandidateNameMutation,
+  useGetQuestionsForCandidateQuery,
+  usePostCheckAnswerMutation,
+  usePostSubmitTestMutation,
+  useGetTestHistoryQuery,
 } = quizApiSlice;

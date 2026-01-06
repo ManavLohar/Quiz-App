@@ -9,6 +9,19 @@ export interface Questions {
   questions: QuestionType[];
   questionModelVisibility: boolean;
   confirmationModelVisibility: boolean;
+  logoutConfirmationModelVisibility: boolean;
+  loginModelVisibility: boolean;
+  generateLinkModelVisibility: boolean;
+  generatedLinkId: string;
+  testResultModelVisibility: boolean;
+  deleteGeneratedQuizDataVisibility: boolean;
   questionId?: string;
   question?: QuestionType;
+  questionNumber: number;
+  testResultId: string;
+}
+
+export interface Admin {
+  email: string;
+  password: string;
 }

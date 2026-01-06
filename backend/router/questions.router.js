@@ -3,13 +3,14 @@ import {
   getQuestions,
   postQuestion,
   deleteQuestion,
-  updateQuestion
+  updateQuestion,
 } from "../controller/questions.controller.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
 export const questionsRouter = router
-  .post("/", postQuestion)
-  .get("/", getQuestions)
-  .delete("/", deleteQuestion)
-  .patch("/", updateQuestion);
+  .post("/", verifyToken, postQuestion)
+  .get("/", verifyToken, getQuestions)
+  .delete("/", verifyToken, deleteQuestion)
+  .patch("/", verifyToken, updateQuestion);

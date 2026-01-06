@@ -9,3 +9,8 @@ export const formValidationSchema = Yup.object({
   ),
   correct_answer: Yup.string().required("Please fill up the answer field!"),
 });
+
+export const adminLoginFormSchema = Yup.object({
+  email: Yup.string().email().required("Email is required!"),
+  password: Yup.string().required("Password is required!"),
+});

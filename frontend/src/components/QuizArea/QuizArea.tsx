@@ -1,65 +1,215 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
+import { useParams } from "react-router-dom";
+import {
+  useGetQuestionsForCandidateQuery,
+  usePostCandidateNameMutation,
+  usePostCheckAnswerMutation,
+  usePostSubmitTestMutation,
+} from "../../redux/slices/quizApiSlice";
+import toast, { Toaster } from "react-hot-toast";
+import { getErrorMessage } from "../../lib";
+import { setNextAndPreviousNumber } from "../../redux/slices/quizSlice";
 
 const QuizArea = () => {
-  interface TempData {
-    question: string;
-    options: string[];
-    correct_answer: string;
-  }
+  const dispatch = useDispatch();
 
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [showResult, setShowResult] = useState(false);
+  const [candidateName, setCandidateName] = useState<string>("");
+  const { adminId, testId } = useParams();
+  const {
+    data: candidateData,
+    isError,
+    isLoading,
+  } = useGetQuestionsForCandidateQuery({
+    adminId,
+    testId,
+  });
 
-  const tempData: TempData = {
-    question: "What is your name?",
-    options: ["Manav", "Rohan", "Quill", "Roman"],
-    correct_answer: "Manav",
+  const questionIndex = useSelector(
+    (state: RootState) => state.quizSlice.questionNumber
+  );
+  const questionLength = candidateData?.data.questions.length;
+  const isQuestionEnd = questionLength === questionIndex + 1 ? true : false;
+  const isCandidateAnsweredAllQuestions = candidateData?.data.questions.every(
+    (item: any) => item.status !== "unattended"
+  );
+
+  const [postCandidateName] = usePostCandidateNameMutation();
+
+  const handlePostCandidateName = async () => {
+    if (candidateName.length >= 2) {
+      try {
+        const res = await postCandidateName({
+          name: candidateName,
+          testId,
+        }).unwrap();
+        console.log(res);
+      } catch (error) {
+        console.log("Something went wrong!", error);
+      }
+    } else {
+      toast.error(
+        getErrorMessage({
+          data: {
+            message: "Please provide atleast two or more letter for name!",
+          },
+        })
+      );
+    }
   };
 
-  const handleOptionClick = (option: string) => {
-    setSelectedOption(option);
-    setShowResult(true);
+  const [postCheckAnswer, { error }] = usePostCheckAnswerMutation();
+
+  const handleOptionClick = async (
+    candidateAnswer: string,
+    questionId: string
+  ) => {
+    try {
+      const data = { candidateAnswer, testId, questionId };
+      const res = await postCheckAnswer(data).unwrap();
+      console.log(res);
+    } catch (err) {
+      toast.error(getErrorMessage(error));
+    }
+  };
+
+  const [
+    postSubmitTest,
+    { error: submitTestError, isLoading: submitTestLoading },
+  ] = usePostSubmitTestMutation();
+
+  const handleSubmitTest = async () => {
+    try {
+      const res = await postSubmitTest({ testId: testId }).unwrap();
+      console.log(res);
+    } catch (error) {
+      toast.error(getErrorMessage(submitTestError));
+    }
   };
 
   return (
-    <div className="flex h-[90vh] justify-center items-center w-full bg-slate-800">
-      <div className="min-h-[300px] flex flex-col gap-4 w-full max-w-[500px] bg-slate-300 p-4 rounded-lg">
-        <h4 className="text-lg">{tempData.question}</h4>
-        <ul className="flex flex-col gap-2">
-          {tempData.options.map((item, index) => {
-            return (
-              <li
-                key={index}
-                onClick={() => {
-                  handleOptionClick(item);
-                  // setCorrectAnswer(item);
-                }}
-                className={`p-2 border rounded cursor-pointer
+    <div className="flex h-screen justify-center items-center w-full bg-slate-800">
+      {isLoading ? (
+        <p className="text-slate-300">Loading...</p>
+      ) : !testId || isError ? (
+        <p className="text-slate-300 text-2xl">Currently no questions here!</p>
+      ) : candidateData?.data.status === "completed" ? (
+        <p className="text-2xl text-slate-300">
+          This test is successfully submited!
+        </p>
+      ) : !candidateData?.data.name ? (
+        <div className="w-[350px] bg-slate-300 rounded-md">
+          <div className="p-4 py-2">
+            <h4 className="text-xl">Enter your name</h4>
+          </div>
+          <div className="px-4 py-2">
+            <input
+              value={candidateName}
+              onChange={(e) => setCandidateName(e.target.value)}
+              className="border border-slate-500 p-1 rounded-md outline-none w-full"
+              type="name"
+            />
+          </div>
+          <div className="px-4 py-2">
+            <button
+              onClick={handlePostCandidateName}
+              type="submit"
+              className="px-4 py-1 w-fit text-lg bg-slate-800 text-slate-300 rounded-lg cursor-pointer"
+            >
+              Start
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="min-h-[300px] flex flex-col gap-4 w-full max-w-[500px] bg-slate-300 p-4 rounded-lg">
+          <h4 className="text-lg">
+            {candidateData?.data.questions[questionIndex].question}
+          </h4>
+          <ul className="flex flex-col gap-2">
+            {candidateData?.data.questions[questionIndex].options.map(
+              (item: any, index: number) => {
+                return (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      handleOptionClick(
+                        item,
+                        candidateData?.data.questions[questionIndex]._id
+                      );
+                      // setCorrectAnswer(item);
+                    }}
+                    className={`p-2 border rounded cursor-pointer text-left
                    ${
-                     !showResult
+                     candidateData?.data.questions[questionIndex].status ===
+                     "unattended"
                        ? "border-slate-400"
-                       : item === tempData.correct_answer
+                       : item ===
+                         candidateData?.data.questions[questionIndex]
+                           .correct_answer
                        ? "border-green-500 bg-[#50ff5036]"
-                       : item === selectedOption
+                       : item ===
+                         candidateData?.data.questions[questionIndex]
+                           .candidateAnswer
                        ? "border-red-500 bg-[#ff00001a]"
                        : "border-slate-400"
                    }
                     `}
+                    disabled={
+                      candidateData?.data.questions[questionIndex].status !==
+                      "unattended"
+                    }
+                  >
+                    {item}
+                  </button>
+                );
+              }
+            )}
+          </ul>
+          <div className="flex justify-between">
+            <div className="flex gap-2">
+              <button
+                onClick={handleSubmitTest}
+                type="button"
+                className={`flex justify-center items-center px-3 py-1 w-30 text-lg ${
+                  isQuestionEnd || isCandidateAnsweredAllQuestions
+                    ? "bg-slate-800"
+                    : " bg-slate-500"
+                } text-slate-300 rounded-lg cursor-pointer`}
+                disabled={!isQuestionEnd && !isCandidateAnsweredAllQuestions}
               >
-                {item}
-              </li>
-            );
-          })}
-        </ul>
-        <button
-          type="button"
-          className="px-4 py-1 w-fit text-lg bg-slate-800 text-slate-300 rounded-lg cursor-pointer"
-        >
-          Next
-        </button>
-      </div>
+                {submitTestLoading ? (
+                  <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+                ) : (
+                  "Submit Test"
+                )}
+              </button>
+            </div>
+            <div className="flex gap-2 items-center">
+              <button
+                onClick={() => dispatch(setNextAndPreviousNumber("dec"))}
+                type="button"
+                className="px-2 py-1 w-fit text-lg border-2 font-extrabold border-slate-800 text-slate-800 rounded-lg cursor-pointer"
+                disabled={questionIndex + 1 === 1 ? true : false}
+              >
+                {"<"}
+              </button>
+              <p className="font-semibold w-10 text-slate-800 text-center">
+                {questionIndex + 1}/{questionLength}
+              </p>
+              <button
+                onClick={() => dispatch(setNextAndPreviousNumber("inc"))}
+                type="button"
+                className="px-2 py-1 w-fit text-lg border-2 font-extrabold border-slate-800 text-slate-800 rounded-lg cursor-pointer"
+                disabled={isQuestionEnd}
+              >
+                {">"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <Toaster />
     </div>
   );
 };

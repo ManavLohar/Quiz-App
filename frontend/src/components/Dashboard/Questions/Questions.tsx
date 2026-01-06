@@ -1,13 +1,19 @@
 import { useDispatch } from "react-redux";
 import {
   setCurrentQuestion,
-  setQuestionId,
+  // setQuestionId,
   toggleConfirmationModelVisibility,
+  toggleGenerateLinkModelVisibility,
   toggleQuestionModelVisibility,
 } from "../../../redux/slices/quizSlice";
 import Skeleton from "react-loading-skeleton";
-import { useGetQuestionsQuery } from "../../../redux/slices/quizApiSlice";
+import {
+  useGenerateTestLinkMutation,
+  useGetQuestionsQuery,
+} from "../../../redux/slices/quizApiSlice";
 import type { QuestionType } from "../../../Schema";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../../../lib";
 
 const Questions = () => {
   const dispatch = useDispatch();
@@ -25,24 +31,55 @@ const Questions = () => {
     dispatch(toggleQuestionModelVisibility());
   };
 
-  const handleDeleteQuestion = (id: any) => {
-    dispatch(setQuestionId(id));
+  const handleDeleteQuestion = (question: QuestionType) => {
+    // dispatch(setQuestionId(id));
+    dispatch(setCurrentQuestion(question));
     dispatch(toggleConfirmationModelVisibility());
   };
+
+  const [generateLink, { isLoading: isGenerateLinkLoading }] =
+    useGenerateTestLinkMutation();
+
+  const handleGenerateLink = async () => {
+    try {
+      const res = await generateLink({}).unwrap();
+      dispatch(toggleGenerateLinkModelVisibility(res?.data.testId));
+    } catch (error: any) {
+      toast.error(getErrorMessage(error?.message));
+    }
+  };
+
   return (
     <div className="flex flex-col p-3 h-full rounded-md overflow-hidden">
       <div className="sticky flex justify-between items-center top-0">
         <h4 className="text-xl text-slate-300">Here is your Questions</h4>
-        <button
-          onClick={() => {
-            dispatch(setQuestionId(""));
-            dispatch(toggleQuestionModelVisibility());
-            dispatch(setCurrentQuestion(initialQuestionValues));
-          }}
-          className="w-fit mt-2 px-4 py-1 bg-slate-300 rounded-md cursor-pointer font-semibold"
-        >
-          Add Question
-        </button>
+        <div className="flex gap-2">
+          {data?.data.length >= 5 ? (
+            <button
+              onClick={() => handleGenerateLink()}
+              className="flex justify-center items-center mt-2 w-32 bg-slate-300 rounded-md cursor-pointer font-semibold"
+            >
+              {isGenerateLinkLoading ? (
+                <span className="animate-spin border-2 border-slate-800 border-t-transparent rounded-full w-4 h-4"></span>
+              ) : (
+                <>
+                  <span>Generate Link</span>
+                </>
+              )}
+            </button>
+          ) : null}
+
+          <button
+            onClick={() => {
+              // dispatch(setQuestionId(""));
+              dispatch(toggleQuestionModelVisibility());
+              dispatch(setCurrentQuestion(initialQuestionValues));
+            }}
+            className="w-fit mt-2 px-4 py-1 bg-slate-300 rounded-md cursor-pointer font-semibold"
+          >
+            Add Question
+          </button>
+        </div>
       </div>
       <div className="mt-4 flex flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:hidden">
         {isLoading &&
@@ -97,7 +134,7 @@ const Questions = () => {
                     Edit
                   </button>
                   <button
-                    onClick={() => handleDeleteQuestion(question._id)}
+                    onClick={() => handleDeleteQuestion(question)}
                     className="w-fit mt-2 px-4 py-1 bg-slate-900 text-white rounded-md cursor-pointer font-semibold"
                   >
                     Delete
@@ -114,7 +151,7 @@ const Questions = () => {
         <div className="flex justify-center">
           <p
             onClick={() => {
-              dispatch(setQuestionId(""));
+              // dispatch(setQuestionId(""));
               dispatch(toggleQuestionModelVisibility());
               dispatch(setCurrentQuestion(initialQuestionValues));
             }}

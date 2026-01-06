@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-const questionSchema = new Schema({
+export const questionSchema = new Schema({
   question: {
     type: String,
     required: true,
@@ -9,6 +9,14 @@ const questionSchema = new Schema({
   correct_answer: {
     type: String,
     required: true,
+  },
+  candidateAnswer: {
+    type: String,
+  },
+  status: {
+    type: String,
+    default: "unattended",
+    enum: ["unattended", "correct", "incorrect"],
   },
 });
 
