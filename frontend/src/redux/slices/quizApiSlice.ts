@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const quizApiSlice = createApi({
   reducerPath: "QuizApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://quiz-app-eight-tau-10.vercel.app/",
+    baseUrl: "https://quiz-app-eight-tau-10.vercel.app",
     credentials: "include",
   }),
   tagTypes: [
@@ -102,7 +102,7 @@ export const quizApiSlice = createApi({
         url: "/admin/candidate/name",
         method: "POST",
         body: data,
-        header: {
+        headers: {
           "Content-Type": "application/json",
         },
       }),
@@ -129,7 +129,7 @@ export const quizApiSlice = createApi({
         url: "/admin/submit-test",
         method: "POST",
         body: data,
-        header: {
+        headers: {
           "Content-Type": "application/json",
         },
       }),
