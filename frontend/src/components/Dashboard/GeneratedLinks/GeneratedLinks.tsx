@@ -24,7 +24,7 @@ const GeneratedLinks = () => {
 
   const [copiedTestId, setCopiedTestId] = useState<string | null>(null);
   const handleCopyLink = (adminId: string, testId: string) => {
-    let generatedLink = `http://localhost:5173/quiz-area/${adminId}/${testId}`;
+    let generatedLink = `https://quiz-app-f8lo.vercel.app/quiz-area/${adminId}/${testId}`;
     navigator.clipboard
       .writeText(generatedLink)
       .then(() => {

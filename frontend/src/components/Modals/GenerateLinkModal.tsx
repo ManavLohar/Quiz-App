@@ -18,7 +18,7 @@ const GenerateLinkModel = () => {
   const [isInfoBox, setIsInfoBox] = useState(false);
   const { data } = useGetAdminQuery({});
   const adminId = data?.data._id;
-  const generatedLink = `http://localhost:5173/quiz-area/${adminId}/${generatedLinkId}`;
+  const generatedLink = `https://quiz-app-f8lo.vercel.app/quiz-area/${adminId}/${generatedLinkId}`;
   const [isCopied, setIsCopied] = useState<boolean>(false);
   const handleCopy = () => {
     navigator.clipboard
