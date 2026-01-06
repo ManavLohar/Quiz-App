@@ -25,7 +25,7 @@ const DeleteGeneratedQuizDataModel = () => {
 
   const handleDelete = async () => {
     try {
-      const res = await deleteQuizData({ testId: generatedLinkId }).unwrap();
+      await deleteQuizData({ testId: generatedLinkId }).unwrap();
     } catch (error: any) {
       console.log("Something went wrong: ", error.error);
     }

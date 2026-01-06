@@ -15,6 +15,7 @@ const Dashboard = () => {
       //   break;
       case "generated quiz":
         navigate("/dashboard/generated-links");
+        break;
       default:
         break;
     }

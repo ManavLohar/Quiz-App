@@ -40,7 +40,7 @@ const QuizArea = () => {
   const handlePostCandidateName = async () => {
     if (candidateName.length >= 2) {
       try {
-        const res = await postCandidateName({
+        await postCandidateName({
           name: candidateName,
           testId,
         }).unwrap();
@@ -66,7 +66,7 @@ const QuizArea = () => {
   ) => {
     try {
       const data = { candidateAnswer, testId, questionId };
-      const res = await postCheckAnswer(data).unwrap();
+      await postCheckAnswer(data).unwrap();
     } catch (err) {
       toast.error(getErrorMessage(error));
     }
@@ -79,7 +79,7 @@ const QuizArea = () => {
 
   const handleSubmitTest = async () => {
     try {
-      const res = await postSubmitTest({ testId: testId }).unwrap();
+      await postSubmitTest({ testId: testId }).unwrap();
     } catch (error) {
       toast.error(getErrorMessage(submitTestError));
     }

@@ -1,5 +1,3 @@
-import Navbar from "../Navbar/Navbar";
-
 const HomePage = () => {
   return (
     <>
