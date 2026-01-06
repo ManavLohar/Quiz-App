@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const quizApiSlice = createApi({
   reducerPath: "QuizApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/",
+    baseUrl: "https://quiz-app-eight-tau-10.vercel.app/",
     credentials: "include",
   }),
   tagTypes: [

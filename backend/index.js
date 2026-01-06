@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-// import { connectDB, isConnected } from "./db/index.js";
+import { connectDB } from "./db/index.js";
 import { adminRouter } from "./router/admin.router.js";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
@@ -12,36 +12,27 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://quiz-app-eight-tau-10.vercel.app",
+    ],
     credentials: true,
   })
 );
 app.use(cookieParser());
-app.use("/admin", adminRouter);
-
-let isConnected = false;
-
-const connectDB = async () => {
+app.use(async (req, res, next) => {
   try {
-    const connectionInstance = await mongoose.connect(process.env.MONGODB_URL);
-    isConnected = true;
-    console.log(`Database connected ${connectionInstance.connection.host}`);
-  } catch (error) {
-    console.log("MongoDB connection error: ", error.message);
-    process.exit(1);
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({ message: "Database connection failed" });
   }
-};
-
-app.use((req, res, next) => {
-  if (!isConnected) {
-    connectDB();
-  }
-  next();
 });
+app.use("/admin", adminRouter);
 
 // connectDB();
 // app.listen(port, () => {
 //   console.log(`Server Started on port: ${port}: ${uuidv4()}`);
 // });
 
-export { app };
+export default app;
