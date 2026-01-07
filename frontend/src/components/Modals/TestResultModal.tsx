@@ -86,15 +86,15 @@ const TestResultModel = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
-            className="relative flex flex-col gap-2 rounded-md w-[450px] m-h-[400px] bg-white"
+            className="relative flex flex-col gap-2 rounded-md w-[300px] sm:w-[450px] m-h-[400px] bg-white"
           >
             <div className="px-4 py-2">
-              <h4 className="text-2xl">
+              <h4 className="text-xl sm:text-2xl">
                 Result for {testResultData?.candidateName}
               </h4>
             </div>
             <div className="flex flex-col px-4">
-              <div className="flex w-[300px] m-auto">
+              <div className="flex w-[250px] sm:w-[300px] m-auto">
                 <Doughnut data={chartData} options={options} />
               </div>
               <div className="flex gap-2 text-left">

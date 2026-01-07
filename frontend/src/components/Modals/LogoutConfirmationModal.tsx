@@ -54,14 +54,16 @@ const LogoutConfirmationModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="relative flex flex-col gap-2 justify-between w-[400px] h-fit bg-slate-300 rounded-md"
+            className="relative flex flex-col gap-2 justify-between w-[300px] h-fit bg-slate-300 rounded-md"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
           >
             <div className="sticky top-0 px-4 pt-4">
               <AiOutlineExclamationCircle className="text-6xl text-slate-700" />
-              <h4 className="text-xl font-semibold">You want to logout?</h4>
+              <h4 className="text-lg sm:text-xl font-semibold">
+                You want to logout?
+              </h4>
             </div>
             <div className="sticky bottom-0 flex mt-2">
               <div className="px-4 pb-4 flex gap-4">

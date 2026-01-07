@@ -27,7 +27,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="flex h-[90vh] overflow-hidden">
-        <div className=" p-4 flex flex-col w-[400px] border-r border-zinc-600 bg-slate-800">
+        <div className="hidden p-4 sm:flex sm:flex-col w-[400px] border-r border-slate-600 bg-slate-800">
           <div className="bg-slate-700 p-3 rounded-md h-full">
             <h4 className="text-white text-2xl uppercase tracking-widest">
               Dashboard
@@ -53,7 +53,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className=" p-4 flex flex-col w-full bg-slate-800 h-[90vh] overflow-hidden">
+        <div className="sm:p-4 flex flex-col w-full bg-slate-800 h-[90vh] overflow-hidden">
           {/* <Questions /> */}
           <Outlet />
         </div>

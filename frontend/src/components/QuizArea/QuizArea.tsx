@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "../../redux/store";
 import { useParams } from "react-router-dom";
@@ -14,9 +14,9 @@ import { setNextAndPreviousNumber } from "../../redux/slices/quizSlice";
 
 const QuizArea = () => {
   const dispatch = useDispatch();
-
   const [candidateName, setCandidateName] = useState<string>("");
   const { adminId, testId } = useParams();
+
   const {
     data: candidateData,
     isError,
@@ -44,7 +44,6 @@ const QuizArea = () => {
           name: candidateName,
           testId,
         }).unwrap();
-        console.log(res);
       } catch (error) {
         console.log("Something went wrong!", error);
       }
@@ -68,7 +67,6 @@ const QuizArea = () => {
     try {
       const data = { candidateAnswer, testId, questionId };
       const res = await postCheckAnswer(data).unwrap();
-      console.log(res);
     } catch (err) {
       toast.error(getErrorMessage(error));
     }
@@ -82,7 +80,6 @@ const QuizArea = () => {
   const handleSubmitTest = async () => {
     try {
       const res = await postSubmitTest({ testId: testId }).unwrap();
-      console.log(res);
     } catch (error) {
       toast.error(getErrorMessage(submitTestError));
     }
@@ -91,15 +88,17 @@ const QuizArea = () => {
   return (
     <div className="flex h-screen justify-center items-center w-full bg-slate-800">
       {isLoading ? (
-        <p className="text-slate-300">Loading...</p>
+        <p className="text-slate-300 text-center">Loading...</p>
       ) : !testId || isError ? (
-        <p className="text-slate-300 text-2xl">Currently no questions here!</p>
+        <p className="text-slate-300 text-2xl text-center">
+          Currently no questions here!
+        </p>
       ) : candidateData?.data.status === "completed" ? (
-        <p className="text-2xl text-slate-300">
+        <p className="text-2xl text-slate-300 text-center">
           This test is successfully submited!
         </p>
       ) : !candidateData?.data.name ? (
-        <div className="w-[350px] bg-slate-300 rounded-md">
+        <div className="w-[300px] sm:w-[350px] bg-slate-300 rounded-md">
           <div className="p-4 py-2">
             <h4 className="text-xl">Enter your name</h4>
           </div>
@@ -107,7 +106,7 @@ const QuizArea = () => {
             <input
               value={candidateName}
               onChange={(e) => setCandidateName(e.target.value)}
-              className="border border-slate-500 p-1 rounded-md outline-none w-full"
+              className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none w-full"
               type="name"
             />
           </div>
@@ -122,7 +121,7 @@ const QuizArea = () => {
           </div>
         </div>
       ) : (
-        <div className="min-h-[300px] flex flex-col gap-4 w-full max-w-[500px] bg-slate-300 p-4 rounded-lg">
+        <div className="sm:min-h-[300px] flex flex-col gap-4 w-[300px] sm:w-full sm:max-w-[500px] bg-slate-300 p-4 rounded-lg">
           <h4 className="text-lg">
             {candidateData?.data.questions[questionIndex].question}
           </h4>
@@ -139,7 +138,7 @@ const QuizArea = () => {
                       );
                       // setCorrectAnswer(item);
                     }}
-                    className={`p-2 border rounded cursor-pointer text-left
+                    className={`p-1 sm:p-2 border rounded text-[12px] sm:text-sm cursor-pointer text-left
                    ${
                      candidateData?.data.questions[questionIndex].status ===
                      "unattended"
@@ -166,12 +165,12 @@ const QuizArea = () => {
               }
             )}
           </ul>
-          <div className="flex justify-between">
+          <div className="flex justify-between items-center">
             <div className="flex gap-2">
               <button
                 onClick={handleSubmitTest}
                 type="button"
-                className={`flex justify-center items-center px-3 py-1 w-30 text-lg ${
+                className={`flex justify-center items-center px-3 py-1 w-25 sm:w-30 h-8 sm:h-10 text-sm sm:text-lg ${
                   isQuestionEnd || isCandidateAnsweredAllQuestions
                     ? "bg-slate-800"
                     : " bg-slate-500"

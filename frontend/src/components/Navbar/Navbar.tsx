@@ -1,23 +1,31 @@
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useGetAdminQuery } from "../../redux/slices/quizApiSlice";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { RxDashboard } from "react-icons/rx";
 import { FiLogOut } from "react-icons/fi";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   toggleLoginModelVisibility,
   toggleLogoutConfirmationModelVisibility,
 } from "../../redux/slices/quizSlice";
-import LogoutConfirmationModel from "../Models/LogoutConfirmationModel";
+import LogoutConfirmationModel from "../Modals/LogoutConfirmationModal";
 import type { RootState } from "../../redux/store";
-import AdminLoginModel from "../Models/AdminLoginModel";
+import AdminLoginModel from "../Modals/AdminLoginModal";
 import quizLogo from "../../assets/quiz-logo.png";
-import GenerateLinkModel from "../Models/GenerateLinkModel";
-import TestResultModel from "../Models/TestResultModel";
-import QuestionModal from "../Models/QuestionModel";
-import QuestionDeleteConfirmationModel from "../Models/QuestionDeleteConfirmationModel";
-import DeleteGeneratedQuizDataModel from "../Models/DeleteGeneratedQuizDataModel";
+import GenerateLinkModel from "../Modals/GenerateLinkModal";
+import TestResultModel from "../Modals/TestResultModal";
+import QuestionModal from "../Modals/QuestionModal";
+import QuestionDeleteConfirmationModel from "../Modals/QuestionDeleteConfirmationModal";
+import DeleteGeneratedQuizDataModel from "../Modals/DeleteGeneratedQuizDataModal";
+import { AnimatePresence, motion } from "motion/react";
+import { TfiClose } from "react-icons/tfi";
+import { FaBarsStaggered } from "react-icons/fa6";
+import { IoHomeOutline } from "react-icons/io5";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+
+gsap.registerPlugin(useGSAP);
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -28,8 +36,18 @@ const Navbar = () => {
   const { data: adminData } = useGetAdminQuery({});
 
   const [menuListToggle, setMenuListToggle] = useState<Boolean>(false);
+
+  useGSAP(() => {
+    // gsap.from(".dashboardBtn", {
+    //   opacity: 0,
+    //   y: 30,
+    //   duration: 1,
+    //   stagger: 0.1,
+    // });
+  });
+
   return (
-    <div className="relative z-10 flex items-center justify-between h-[10vh] w-full p-2 bg-slate-800 border-b border-zinc-600">
+    <div className="relative z-10 flex items-center justify-between h-[10vh] w-full p-2 bg-slate-800 border-b border-slate-600">
       <div className="flex-1 flex justify-left">
         <p className="text-slate-300">
           <img className="h-14" src={quizLogo} alt="" />
@@ -38,7 +56,8 @@ const Navbar = () => {
       {/* <h1 className="flex-1 flex justify-center text-2xl uppercase text-slate-300">
         Quiz Game
       </h1> */}
-      <div className="flex-1 flex justify-end">
+      {/* For large devices */}
+      <div className="hidden sm:flex-1 sm:flex justify-end">
         {adminData ? (
           <div className="relative">
             <div
@@ -54,26 +73,39 @@ const Navbar = () => {
               </span>
             </div>
             {menuListToggle && (
-              <div className="absolute flex flex-col border border-slate-400 items-start top-14 bg-slate-300 overflow-hidden w-35 right-0 rounded-md">
+              <div className="absolute flex flex-col border border-slate-600 items-start top-14 bg-slate-700/60 backdrop-blur-lg overflow-hidden w-45 right-0 rounded-md">
+                <button
+                  onClick={() => {
+                    navigate("/");
+                    setMenuListToggle(!menuListToggle);
+                  }}
+                  className="flex gap-2 items-center border-none text-slate-300 p-2 cursor-pointer w-full text-left transition duration-500 hover:bg-slate-500 font-semibold"
+                >
+                  <span>
+                    <IoHomeOutline />
+                  </span>
+                  Home
+                </button>
+                <hr className="w-full text-slate-600" />
                 <button
                   onClick={() => {
                     navigate("/dashboard/questions");
                     setMenuListToggle(!menuListToggle);
                   }}
-                  className="flex gap-2 items-center border-none text-slate-800 p-2 cursor-pointer w-full text-left transition duration-500 hover:bg-slate-400 font-semibold"
+                  className="flex gap-2 items-center border-none text-slate-300 p-2 cursor-pointer w-full text-left transition duration-500 hover:bg-slate-500 font-semibold"
                 >
                   <span>
                     <RxDashboard />
                   </span>
                   Dashboard
                 </button>
-                <hr className="w-full text-slate-400" />
+                <hr className="w-full text-slate-600" />
                 <button
                   onClick={() => {
                     dispatch(toggleLogoutConfirmationModelVisibility());
                     setMenuListToggle(!menuListToggle);
                   }}
-                  className="flex gap-2 items-center border-none text-slate-800 p-2 cursor-pointer w-full text-left transition duration-500 hover:bg-slate-400 font-semibold"
+                  className="flex gap-2 items-center border-none text-slate-300 p-2 cursor-pointer w-full text-left transition duration-500 hover:bg-slate-500 font-semibold"
                 >
                   <span>
                     <FiLogOut />
@@ -92,6 +124,105 @@ const Navbar = () => {
           </button>
         )}
       </div>
+
+      {/* For small devices */}
+      {adminData ? (
+        <>
+          <div className="sm:hidden">
+            <FaBarsStaggered
+              onClick={() => setMenuListToggle(true)}
+              size={24}
+              className="text-slate-300"
+            />
+          </div>
+          <AnimatePresence>
+            {menuListToggle ? (
+              <motion.div
+                className="fixed sm:hidden inset-0 flex justify-end items-center bg-black/40"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <motion.div
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ type: "spring", duration: 0.2, damping: 18 }}
+                  className="relative w-[300px] bg-slate-800/60 backdrop-blur-lg h-full"
+                >
+                  <div className="absolute top-5 left-4 z-10">
+                    <TfiClose
+                      onClick={() => setMenuListToggle(false)}
+                      className="cursor-pointer text-slate-300"
+                      size={24}
+                    />
+                  </div>
+                  <div className="flex h-full flex-col justify-evenly p-2">
+                    <div className="flex justify-end">
+                      <img className="h-14" src={quizLogo} alt="" />
+                    </div>
+                    <div className="flex flex-col gap-2 items-end">
+                      <h4 className="text-xl text-slate-300 font-bold">
+                        Dashboard
+                      </h4>
+                      <ul className="flex flex-col gap-1 items-end">
+                        <NavLink
+                          to={"/dashboard/questions"}
+                          onClick={() => setMenuListToggle(false)}
+                          className="font-semibold text-slate-300"
+                        >
+                          Questions
+                        </NavLink>
+                        <NavLink
+                          to={"/dashboard/generated-links"}
+                          onClick={() => setMenuListToggle(false)}
+                          className="font-semibold text-slate-300"
+                        >
+                          Generated Quizzes
+                        </NavLink>
+                      </ul>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <div
+                        onClick={() => setMenuListToggle(!menuListToggle)}
+                        className="flex justify-end gap-2 rounded-md items-center cursor-pointer"
+                      >
+                        <p className="h-12 w-12 bg-slate-300 rounded-full text-xl flex justify-center items-center">
+                          {adminData?.data.name.slice("")[0]}
+                        </p>
+                        <p className="text-slate-300 font-semibold text-xl">
+                          {adminData?.data.name}
+                        </p>
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          onClick={() => {
+                            dispatch(toggleLogoutConfirmationModelVisibility());
+                            setMenuListToggle(!menuListToggle);
+                          }}
+                          className="flex gap-2 items-center border-none text-slate-300 cursor-pointer font-semibold"
+                        >
+                          <span>
+                            <FiLogOut />
+                          </span>
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </>
+      ) : (
+        <button
+          onClick={() => dispatch(toggleLoginModelVisibility())}
+          className="sm:hidden bg-slate-300 px-3 py-1 rounded-md font-semibold cursor-pointer"
+        >
+          Login
+        </button>
+      )}
       {loginModelVisibility ? <AdminLoginModel /> : null}
       <LogoutConfirmationModel />
       <QuestionModal />

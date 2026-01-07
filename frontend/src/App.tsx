@@ -6,7 +6,7 @@ import { useGetQuestionsQuery } from "./redux/slices/quizApiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addQuestion } from "./redux/slices/quizSlice";
 import "react-loading-skeleton/dist/skeleton.css";
-import LogoutConfirmationModel from "./components/Models/LogoutConfirmationModel";
+import LogoutConfirmationModel from "./components/Modals/LogoutConfirmationModal";
 import type { RootState } from "./redux/store";
 
 const App = () => {

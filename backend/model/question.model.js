@@ -19,5 +19,3 @@ export const questionSchema = new Schema({
     enum: ["unattended", "correct", "incorrect"],
   },
 });
-
-export const QuestionModel = new model("Question", questionSchema);

@@ -90,7 +90,7 @@ const QuestionModal = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="flex flex-col h-fit w-[450px] bg-slate-300 rounded-md p-4"
+            className="flex flex-col h-fit w-[300px] sm:w-[450px] bg-slate-300 rounded-md p-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
@@ -107,16 +107,19 @@ const QuestionModal = () => {
                 className="text-2xl cursor-pointer font-light"
               />
             </div>
-            <form onSubmit={handleSubmit} className="flex flex-col mt-2 gap-3">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col mt-2 gap-2 sm:gap-3"
+            >
               <div className="flex flex-col gap-2 w-full">
                 <label
                   htmlFor=""
-                  className="text-[14px] text-slate-600 font-semibold"
+                  className="text-[12px] sm:text-[14px] text-slate-600 font-semibold"
                 >
                   Question
                 </label>
                 <input
-                  className="border border-slate-500 p-1 rounded-md outline-none"
+                  className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none"
                   type="text"
                   name="question"
                   value={values.question}
@@ -130,7 +133,7 @@ const QuestionModal = () => {
               <div className="flex flex-col gap-2 w-full">
                 <label
                   htmlFor=""
-                  className="text-[14px] text-slate-600 font-semibold"
+                  className="text-[12px] sm:text-[14px] text-slate-600 font-semibold"
                 >
                   Options
                 </label>
@@ -144,7 +147,7 @@ const QuestionModal = () => {
                         onChange={handleChange}
                         // onBlur={handleBlur}
                         type="text"
-                        className="border border-slate-500 p-1 rounded-md outline-none w-full placeholder:text-[12px]"
+                        className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none w-full placeholder:text-[12px]"
                         placeholder={`Option ${index + 1}`}
                       />
                     );
@@ -157,7 +160,7 @@ const QuestionModal = () => {
               <div className="flex flex-col gap-2 w-full">
                 <label
                   htmlFor=""
-                  className="text-[14px] text-slate-600 font-semibold"
+                  className="text-[12px] sm:text-[14px] text-slate-600 font-semibold"
                 >
                   Correct Answer
                 </label>
@@ -167,7 +170,7 @@ const QuestionModal = () => {
                   value={values.correct_answer}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className="border border-slate-500 p-1 rounded-md outline-none"
+                  className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none"
                 />
                 {touched.correct_answer && errors.correct_answer ? (
                   <p className="text-red-600 text-[12px]">

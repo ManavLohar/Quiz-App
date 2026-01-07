@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import { questionsRouter } from "./router/questions.router.js";
 import { connectDB } from "./db/index.js";
 import { adminRouter } from "./router/admin.router.js";
 import "dotenv/config";
@@ -19,7 +18,6 @@ app.use(
 );
 app.use(cookieParser());
 app.use("/admin", adminRouter);
-app.use("/question", questionsRouter);
 
 connectDB();
 app.listen(port, () => {

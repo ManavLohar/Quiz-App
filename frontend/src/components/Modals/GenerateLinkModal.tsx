@@ -45,7 +45,7 @@ const GenerateLinkModel = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
-            className="relative flex flex-col gap-2 justify-between w-[400px] h-fit bg-slate-300 rounded-md"
+            className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-300 rounded-md"
           >
             <div className="flex flex-col p-4 pb-0 relative">
               <IoIosLink className="text-6xl" />

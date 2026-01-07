@@ -18,7 +18,7 @@ import {
 const persistConfig = {
   key: "quiz-app",
   storage,
-  whitelist: [""],
+  whitelist: [],
 };
 
 const rootReducer = combineReducers({
