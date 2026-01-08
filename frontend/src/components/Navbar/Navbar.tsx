@@ -35,7 +35,7 @@ const Navbar = () => {
   );
   const { data: adminData, isLoading } = useGetAdminQuery({});
 
-  const [menuListToggle, setMenuListToggle] = useState<Boolean>(true);
+  const [menuListToggle, setMenuListToggle] = useState<Boolean>(false);
   const [subMenuToggle, setSubMenuToggle] = useState<Boolean>(false);
 
   useGSAP(() => {
