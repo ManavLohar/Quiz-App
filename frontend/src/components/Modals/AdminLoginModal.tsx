@@ -51,18 +51,18 @@ const AdminLoginModel = () => {
         }}
         className="absolute top-4 right-4 text-2xl sm:text-4xl text-slate-300 cursor-pointer font-light"
       />
-      <div className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-300 rounded-md">
+      <div className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-500/30 backdrop-blur-xs border-2 border-slate-600 rounded-md">
         <div className="flex flex-col p-4 pb-0">
-          <CiLogin className="text-4xl sm:text-6xl" />
-          <h4 className="text-xl font-semibold">Admin Login</h4>
+          <CiLogin className="text-4xl text-slate-400 sm:text-6xl" />
+          <h4 className="text-xl text-slate-300 font-semibold">Admin Login</h4>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col mt-2 pb-4 gap-3">
           <div className="flex flex-col gap-2 w-full px-4">
-            <label className="text-[12px] sm:text-[14px] text-slate-600 font-semibold">
+            <label className="text-[12px] sm:text-[14px] text-slate-400 font-semibold">
               Email
             </label>
             <input
-              className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none"
+              className="border-2 text-slate-300 border-slate-500 p-0.5 sm:p-1 rounded-md outline-none"
               type="text"
               name="email"
               value={values.email}
@@ -74,11 +74,11 @@ const AdminLoginModel = () => {
             ) : null}
           </div>
           <div className="flex flex-col gap-2 w-full px-4">
-            <label className="text-[12px] sm:text-[14px] text-slate-600 font-semibold">
+            <label className="text-[12px] sm:text-[14px] text-slate-400 font-semibold">
               Password
             </label>
             <input
-              className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none"
+              className="border-2 border-slate-500 text-slate-300 p-0.5 sm:p-1 rounded-md outline-none"
               type="password"
               name="password"
               value={values.password}
@@ -92,7 +92,7 @@ const AdminLoginModel = () => {
           <div className="px-4">
             <button
               type="submit"
-              className="flex justify-center items-center gap-2 mt-2 w-18 h-8 bg-slate-900 text-white rounded-md cursor-pointer font-semibold"
+              className="flex justify-center items-center gap-2 mt-2 w-18 h-8 bg-slate-900 border-2 border-slate-500 text-white rounded-md cursor-pointer font-semibold"
               disabled={isLoading}
             >
               {isLoading ? (

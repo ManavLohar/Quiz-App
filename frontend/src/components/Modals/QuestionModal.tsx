@@ -10,7 +10,6 @@ import {
   usePostQuestionMutation,
   useUpdateQuestionMutation,
 } from "../../redux/slices/quizApiSlice";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 import type { RootState } from "../../redux/store";
 import { motion, AnimatePresence } from "motion/react";
@@ -32,34 +31,9 @@ const QuestionModal = () => {
 
   const isEditMode = Boolean(selectedQuestion?._id);
 
-  const [postQuestion, { isLoading, isSuccess, isError }] =
-    usePostQuestionMutation();
-  const [
-    updateQuestion,
-    {
-      isLoading: isUpdateLoading,
-      isSuccess: isUpdateSuccess,
-      isError: isUpdateError,
-    },
-  ] = useUpdateQuestionMutation();
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Your question is successfully posted!");
-      dispatch(toggleQuestionModelVisibility());
-    }
-    if (isError) {
-      toast.error("Something went wrong!");
-    }
-    if (isUpdateSuccess) {
-      toast.success("Your question is successfully updated!");
-      dispatch(toggleQuestionModelVisibility());
-      dispatch(setCurrentQuestion(initialValues));
-    }
-    if (isUpdateError) {
-      toast.error("Something went wrong?");
-    }
-  }, [isSuccess, isUpdateSuccess, isError, isUpdateError, dispatch]);
+  const [postQuestion, { isLoading }] = usePostQuestionMutation();
+  const [updateQuestion, { isLoading: isUpdateLoading }] =
+    useUpdateQuestionMutation();
 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
@@ -67,17 +41,21 @@ const QuestionModal = () => {
       initialValues: selectedQuestion ?? initialValues,
       validationSchema: formValidationSchema,
       onSubmit: async (values, { resetForm }) => {
-        const newQuestion = {
-          ...values,
-        };
-        if (isEditMode) {
-          const res = await updateQuestion(newQuestion);
-          console.log(res);
-        } else {
-          const res = await postQuestion(newQuestion);
-          console.log(res);
+        try {
+          if (isEditMode) {
+            await updateQuestion(values).unwrap();
+            toast.success("Question updated!");
+            dispatch(setCurrentQuestion(initialValues));
+          } else {
+            await postQuestion(values).unwrap();
+            toast.success("Question added!");
+          }
+
+          dispatch(toggleQuestionModelVisibility());
+          resetForm();
+        } catch (error) {
+          toast.error("Something went wrong!");
         }
-        resetForm();
       },
     });
   return (
@@ -90,13 +68,14 @@ const QuestionModal = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="flex flex-col h-fit w-[300px] sm:w-[450px] bg-slate-300 rounded-md p-4"
+            className="flex flex-col h-fit w-[300px] sm:w-[450px] bg-slate-500/30 backdrop-blur-xs shadow-2xl border-2 border-slate-600 rounded-md p-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="flex justify-between">
-              <h2 className="text-xl">
+              <h2 className="text-xl text-slate-300">
                 {isEditMode ? "Edit Question" : "Add Question"}
               </h2>
               <TfiClose
@@ -104,7 +83,7 @@ const QuestionModal = () => {
                   dispatch(toggleQuestionModelVisibility());
                   dispatch(setCurrentQuestion(initialValues));
                 }}
-                className="text-2xl cursor-pointer font-light"
+                className="text-2xl text-slate-300 cursor-pointer font-light"
               />
             </div>
             <form
@@ -114,17 +93,18 @@ const QuestionModal = () => {
               <div className="flex flex-col gap-2 w-full">
                 <label
                   htmlFor=""
-                  className="text-[12px] sm:text-[14px] text-slate-600 font-semibold"
+                  className="text-[12px] sm:text-[14px] text-slate-400 font-semibold"
                 >
                   Question
                 </label>
                 <input
-                  className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none"
+                  className="border-2 border-slate-500 text-slate-300 placeholder:text-sm p-0.5 sm:p-1 rounded-md outline-none"
                   type="text"
                   name="question"
                   value={values.question}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  placeholder="Type your question"
                 />
                 {touched.question && errors.question ? (
                   <p className="text-red-600 text-[12px]">{errors.question}</p>
@@ -133,7 +113,7 @@ const QuestionModal = () => {
               <div className="flex flex-col gap-2 w-full">
                 <label
                   htmlFor=""
-                  className="text-[12px] sm:text-[14px] text-slate-600 font-semibold"
+                  className="text-[12px] sm:text-[14px] text-slate-400 font-semibold"
                 >
                   Options
                 </label>
@@ -147,7 +127,7 @@ const QuestionModal = () => {
                         onChange={handleChange}
                         // onBlur={handleBlur}
                         type="text"
-                        className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none w-full placeholder:text-[12px]"
+                        className="border-2 border-slate-500 p-0.5 sm:p-1 rounded-md outline-none w-full placeholder:text-sm text-slate-300"
                         placeholder={`Option ${index + 1}`}
                       />
                     );
@@ -160,7 +140,7 @@ const QuestionModal = () => {
               <div className="flex flex-col gap-2 w-full">
                 <label
                   htmlFor=""
-                  className="text-[12px] sm:text-[14px] text-slate-600 font-semibold"
+                  className="text-[12px] sm:text-[14px] text-slate-400 font-semibold"
                 >
                   Correct Answer
                 </label>
@@ -170,7 +150,8 @@ const QuestionModal = () => {
                   value={values.correct_answer}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none"
+                  placeholder="Type your correct answer"
+                  className="border-2 border-slate-500 p-0.5 sm:p-1 text-slate-300 rounded-md outline-none placeholder:text-sm"
                 />
                 {touched.correct_answer && errors.correct_answer ? (
                   <p className="text-red-600 text-[12px]">
@@ -180,7 +161,7 @@ const QuestionModal = () => {
               </div>
               <button
                 type="submit"
-                className="flex justify-center items-center gap-2 mt-2 w-15 h-8 bg-slate-900 text-white rounded-md cursor-pointer font-semibold"
+                className="flex justify-center items-center gap-2 mt-2 w-15 h-8 bg-slate-800 text-slate-300 rounded-md cursor-pointer font-semibold border-2 border-slate-500"
                 disabled={isLoading || isUpdateLoading}
               >
                 {isLoading || isUpdateLoading ? (

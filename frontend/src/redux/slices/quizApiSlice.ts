@@ -4,6 +4,7 @@ export const quizApiSlice = createApi({
   reducerPath: "QuizApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://quiz-app-eight-tau-10.vercel.app",
+    // baseUrl: "http://localhost:5000",
     credentials: "include",
   }),
   tagTypes: [
@@ -122,7 +123,35 @@ export const quizApiSlice = createApi({
           "Content-Type": "application/json",
         },
       }),
-      invalidatesTags: ["CandidateQuestions"],
+      async onQueryStarted(
+        { candidateAnswer, testId, questionId, adminId },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          quizApiSlice.util.updateQueryData(
+            "getQuestionsForCandidate",
+            {
+              adminId,
+              testId,
+            },
+            (draft: any) => {
+              const question = draft.data.questions.find(
+                (q: any) => q._id === questionId
+              );
+              if (question && !question.attempt) {
+                question.candidateAnswer = candidateAnswer;
+                question.attempt = true;
+              }
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          patchResult.undo();
+        }
+      },
+      // invalidatesTags: ["CandidateQuestions"],
     }),
     postSubmitTest: builder.mutation({
       query: (data) => ({

@@ -65,7 +65,7 @@ const QuizArea = () => {
     questionId: string
   ) => {
     try {
-      const data = { candidateAnswer, testId, questionId };
+      const data = { candidateAnswer, testId, questionId, adminId };
       await postCheckAnswer(data).unwrap();
     } catch (err) {
       toast.error(getErrorMessage(error));
@@ -98,15 +98,15 @@ const QuizArea = () => {
           This test is successfully submited!
         </p>
       ) : !candidateData?.data.name ? (
-        <div className="w-[300px] sm:w-[350px] bg-slate-300 rounded-md">
+        <div className="w-[300px] sm:w-[350px] bg-slate-500/30 backdrop-blur-xs border-2 border-slate-600 rounded-md">
           <div className="p-4 py-2">
-            <h4 className="text-xl">Enter your name</h4>
+            <h4 className="text-xl text-slate-300">Enter your name</h4>
           </div>
           <div className="px-4 py-2">
             <input
               value={candidateName}
               onChange={(e) => setCandidateName(e.target.value)}
-              className="border border-slate-500 p-0.5 sm:p-1 rounded-md outline-none w-full"
+              className="border-2 border-slate-500 text-slate-300 p-0.5 sm:p-1 rounded-md outline-none w-full"
               type="name"
             />
           </div>
@@ -114,15 +114,15 @@ const QuizArea = () => {
             <button
               onClick={handlePostCandidateName}
               type="submit"
-              className="px-4 py-1 w-fit text-lg bg-slate-800 text-slate-300 rounded-lg cursor-pointer"
+              className="px-4 py-1 w-fit text-lg bg-slate-800 text-slate-300 border-2 border-slate-500 rounded-lg cursor-pointer"
             >
               Start
             </button>
           </div>
         </div>
       ) : (
-        <div className="sm:min-h-[300px] flex flex-col gap-4 w-[300px] sm:w-full sm:max-w-[500px] bg-slate-300 p-4 rounded-lg">
-          <h4 className="text-lg">
+        <div className="sm:min-h-[300px] flex flex-col gap-4 w-[300px] sm:w-full sm:max-w-[500px] bg-slate-300/10 backdrop-blur-xs border-2 border-slate-600 p-4 rounded-lg">
+          <h4 className="text-lg text-slate-300">
             {candidateData?.data.questions[questionIndex].question}
           </h4>
           <ul className="flex flex-col gap-2">
@@ -138,25 +138,28 @@ const QuizArea = () => {
                       );
                       // setCorrectAnswer(item);
                     }}
-                    className={`p-1 sm:p-2 border rounded text-[12px] sm:text-sm cursor-pointer text-left
+                    className={`p-1 sm:p-2 border-2 border-slate-600 rounded text-[12px] text-slate-300 sm:text-sm cursor-pointer text-left
                    ${
-                     candidateData?.data.questions[questionIndex].status ===
-                     "unattended"
-                       ? "border-slate-400"
-                       : item ===
-                         candidateData?.data.questions[questionIndex]
-                           .correct_answer
-                       ? "border-green-500 bg-[#50ff5036]"
-                       : item ===
-                         candidateData?.data.questions[questionIndex]
-                           .candidateAnswer
-                       ? "border-red-500 bg-[#ff00001a]"
+                     // candidateData?.data.questions[questionIndex].attempt ===
+                     //  "unattended"
+                     //    ? "border-slate-400"
+                     //    : item ===
+                     //      candidateData?.data.questions[questionIndex]
+                     //        .correct_answer
+                     //    ? "border-green-500 bg-[#50ff5036]"
+                     //    : item ===
+                     //      candidateData?.data.questions[questionIndex]
+                     //        .candidateAnswer
+                     //    ? "border-red-500 bg-[#ff00001a]"
+                     //    : "border-slate-400"
+                     candidateData?.data.questions[questionIndex]
+                       .candidateAnswer === item
+                       ? "border-blue-500 bg-slate-600"
                        : "border-slate-400"
                    }
                     `}
                     disabled={
-                      candidateData?.data.questions[questionIndex].status !==
-                      "unattended"
+                      candidateData?.data.questions[questionIndex].attempt
                     }
                   >
                     {item}
@@ -170,15 +173,15 @@ const QuizArea = () => {
               <button
                 onClick={handleSubmitTest}
                 type="button"
-                className={`flex justify-center items-center px-3 py-1 w-25 sm:w-30 h-8 sm:h-10 text-sm sm:text-lg ${
+                className={`flex justify-center items-center border-2 border-slate-500 px-3 py-1 w-25 sm:w-28 h-8 text-[16px] ${
                   isQuestionEnd || isCandidateAnsweredAllQuestions
                     ? "bg-slate-800"
-                    : " bg-slate-500"
-                } text-slate-300 rounded-lg cursor-pointer`}
+                    : " bg-slate-600"
+                } text-slate-300 font-semibold rounded-lg cursor-pointer`}
                 disabled={!isQuestionEnd && !isCandidateAnsweredAllQuestions}
               >
                 {submitTestLoading ? (
-                  <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+                  <span className="animate-spin border-2 border-slate-300 border-t-transparent rounded-full w-4 h-4"></span>
                 ) : (
                   "Submit Test"
                 )}
@@ -188,18 +191,18 @@ const QuizArea = () => {
               <button
                 onClick={() => dispatch(setNextAndPreviousNumber("dec"))}
                 type="button"
-                className="px-2 py-1 w-fit text-lg border-2 font-extrabold border-slate-800 text-slate-800 rounded-lg cursor-pointer"
+                className="px-2 py-1 w-fit text-lg border-2 font-extrabold border-slate-400 text-slate-400 rounded-lg cursor-pointer"
                 disabled={questionIndex + 1 === 1 ? true : false}
               >
                 {"<"}
               </button>
-              <p className="font-semibold w-10 text-slate-800 text-center">
+              <p className="font-semibold w-10 text-slate-400 text-center">
                 {questionIndex + 1}/{questionLength}
               </p>
               <button
                 onClick={() => dispatch(setNextAndPreviousNumber("inc"))}
                 type="button"
-                className="px-2 py-1 w-fit text-lg border-2 font-extrabold border-slate-800 text-slate-800 rounded-lg cursor-pointer"
+                className="px-2 py-1 w-fit text-lg border-2 font-extrabold border-slate-400 text-slate-400 rounded-lg cursor-pointer"
                 disabled={isQuestionEnd}
               >
                 {">"}

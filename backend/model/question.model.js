@@ -18,4 +18,8 @@ export const questionSchema = new Schema({
     default: "unattended",
     enum: ["unattended", "correct", "incorrect"],
   },
+  attempt: {
+    type: Boolean,
+    default: false,
+  },
 });

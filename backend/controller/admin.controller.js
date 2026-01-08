@@ -70,20 +70,18 @@ export const adminLogin = async (req, res) => {
     const token = jwt.sign({ email }, process.env.SECRET_KEY, {
       expiresIn: "24h",
     });
-    setTimeout(() => {
-      return res
-        .status(200)
-        .cookie("accessToken", token, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-          sameSite: "none",
-        })
-        .json({
-          success: true,
-          message: "Login successfully!",
-        });
-    }, 1000);
+    return res
+      .status(200)
+      .cookie("accessToken", token, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        sameSite: "none",
+      })
+      .json({
+        success: true,
+        message: "Login successfully!",
+      });
   } catch (error) {
     console.log("Error from login admin: ", error);
     res.status(500).json({
@@ -119,19 +117,17 @@ export const getAdmin = async (req, res) => {
 
 export const logoutAdmin = async (req, res) => {
   try {
-    setTimeout(() => {
-      return res
-        .status(200)
-        .clearCookie("accessToken", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-        })
-        .json({
-          success: true,
-          message: "Logout successfully!",
-        });
-    }, 1000);
+    return res
+      .status(200)
+      .clearCookie("accessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
+      .json({
+        success: true,
+        message: "Logout successfully!",
+      });
   } catch (error) {
     console.log("Error from logout admin: ", error);
     res.status(500).json({
@@ -159,13 +155,11 @@ export const postQuestion = async (req, res) => {
     };
     admin.questions.push(data);
     await admin.save();
-    setTimeout(() => {
-      return res.status(200).json({
-        success: true,
-        message: "Data fetched!",
-        data: admin.questions[admin.questions.length - 1],
-      });
-    }, 1000);
+    return res.status(200).json({
+      success: true,
+      message: "Data fetched!",
+      data: admin.questions[admin.questions.length - 1],
+    });
   } catch (error) {
     console.log("Error from post questions: ", error);
     return res.status(500).json({
@@ -185,13 +179,11 @@ export const getQuestions = async (req, res) => {
         message: "Admin not found!",
       });
     }
-    setTimeout(() => {
-      return res.status(200).json({
-        success: true,
-        message: "Questions fetched!",
-        data: admin.questions,
-      });
-    }, 1000);
+    return res.status(200).json({
+      success: true,
+      message: "Questions fetched!",
+      data: admin.questions,
+    });
   } catch (error) {
     console.log("Error from get questions: ", error);
     res.status(500).json({
@@ -398,6 +390,7 @@ export const postCheckAnswer = async (req, res) => {
         $set: {
           "questions.$.candidateAnswer": candidateAnswer,
           "questions.$.status": status,
+          "questions.$.attempt": true,
         },
       }
     );
@@ -434,13 +427,11 @@ export const postGenerateLinkForTest = async (req, res) => {
       adminId: admin._id,
     };
     const candidate = await CandidateModel.create(data);
-    setTimeout(() => {
-      return res.status(200).json({
-        success: true,
-        message: "Link Generated successfully!",
-        data: candidate,
-      });
-    }, 1000);
+    return res.status(200).json({
+      success: true,
+      message: "Link Generated successfully!",
+      data: candidate,
+    });
   } catch (error) {
     console.log("Error in generateLink", error);
     return res.status(500).json({
@@ -462,12 +453,10 @@ export const deleteGeneratedTestLink = async (req, res) => {
     }
     await CandidateModel.deleteOne({ testId });
     await TestHistoryModel.deleteOne({ testId });
-    setTimeout(() => {
-      return res.status(200).json({
-        success: true,
-        message: "Record deleted successfully!",
-      });
-    }, 1000);
+    return res.status(200).json({
+      success: true,
+      message: "Record deleted successfully!",
+    });
   } catch (error) {
     console.log("Error in deleteGeneratedTestLink", error);
     return res.status(500).json({
@@ -524,12 +513,10 @@ export const postSubmitTest = async (req, res) => {
         },
       },
     });
-    setTimeout(() => {
-      return res.status(200).json({
-        success: true,
-        message: "Test is completed!",
-      });
-    }, 1000);
+    return res.status(200).json({
+      success: true,
+      message: "Test is completed!",
+    });
   } catch (error) {
     console.log("Error in postCheckAnswer", error);
     return res.status(500).json({

@@ -4,7 +4,6 @@ import { connectDB } from "./db/index.js";
 import { adminRouter } from "./router/admin.router.js";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
-import { v4 as uuidv4 } from "uuid";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -29,7 +28,7 @@ app.use("/admin", adminRouter);
 
 // connectDB();
 // app.listen(port, () => {
-//   console.log(`Server Started on port: ${port}: ${uuidv4()}`);
+//   console.log(`Server Started on port: ${port}`);
 // });
 
 export default app;

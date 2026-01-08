@@ -13,8 +13,8 @@ const Dashboard = () => {
       // case "history":
       //   navigate("/dashboard/test-history");
       //   break;
-      case "generated quiz":
-        navigate("/dashboard/generated-links");
+      case "generated quizzes":
+        navigate("/dashboard/generated-quizzes");
         break;
       default:
         break;
@@ -35,7 +35,7 @@ const Dashboard = () => {
             </h4>
             <div className="mt-4">
               <ul className="list-none">
-                {["Questions", "Generated Quiz"].map((item, index) => {
+                {["Questions", "Generated Quizzes"].map((item, index) => {
                   return (
                     <li
                       key={index}

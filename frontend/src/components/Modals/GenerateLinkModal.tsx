@@ -45,23 +45,24 @@ const GenerateLinkModel = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
-            className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-300 rounded-md"
+            transition={{ duration: 0.3 }}
+            className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-500/30 backdrop-blur-xs rounded-md border-2 border-slate-600"
           >
             <div className="flex flex-col p-4 pb-0 relative">
-              <IoIosLink className="text-6xl" />
-              <h4 className="text-xl flex gap-1 items-center">
+              <IoIosLink className="text-6xl text-slate-300" />
+              <h4 className="text-xl flex gap-1 items-center text-slate-300">
                 Here is your link{" "}
                 <span
                   className="mt-1"
                   onMouseEnter={() => setIsInfoBox(true)}
                   onMouseLeave={() => setIsInfoBox(false)}
                 >
-                  <MdOutlineInfo className="text-slate-600" />
+                  <MdOutlineInfo className="text-slate-300" />
                 </span>
               </h4>
               {isInfoBox && (
                 <div className="absolute bottom-0 left-48 p-2 border w-50 border-slate-500 rounded-md">
-                  <span className=" text-[10px]">
+                  <span className=" text-[10px] text-slate-300">
                     Here is the <b>Generated Link</b>, you can{" "}
                     <b>share this link</b> to your candidate for test!
                   </span>
@@ -72,12 +73,12 @@ const GenerateLinkModel = () => {
               <input
                 type="text"
                 value={generatedLink && generatedLink}
-                className="border border-slate-500 p-1 rounded-md outline-none w-full"
+                className="border-2 border-slate-500 text-slate-300 p-1 rounded-md outline-none w-full"
                 readOnly
               />
               <button
                 onClick={handleCopy}
-                className="bg-slate-800 text-slate-300 px-3 py-1 rounded-md font-semibold cursor-pointer"
+                className="bg-slate-800 text-slate-300 border-2 border-slate-500 px-3 py-1 rounded-md font-semibold cursor-pointer"
                 disabled={isCopied}
               >
                 {isCopied ? "Copied" : "Copy"}
@@ -86,7 +87,7 @@ const GenerateLinkModel = () => {
             <div className="py-2 pb-4 px-4">
               <button
                 onClick={() => dispatch(toggleGenerateLinkModelVisibility(""))}
-                className="bg-slate-800 text-slate-300 px-3 py-1 rounded-md font-semibold cursor-pointer"
+                className="bg-slate-800 text-slate-300 border-2 border-slate-500 px-3 py-1 rounded-md font-semibold cursor-pointer"
               >
                 Done
               </button>

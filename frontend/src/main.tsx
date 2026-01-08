@@ -12,7 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.tsx";
 import { PersistGate } from "redux-persist/integration/react";
 import Questions from "./components/Dashboard/Questions/Questions.tsx";
 // import TestHistory from "./components/Dashboard/TestHistory/TestHistory.tsx";
-import GeneratedLinks from "./components/Dashboard/GeneratedLinks/GeneratedLinks.tsx";
+import GeneratedLinks from "./components/Dashboard/GeneratedQuizzes/GeneratedQuizzes.tsx";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
               //   element: <TestHistory />,
               // },
               {
-                path: "generated-links",
+                path: "generated-quizzes",
                 element: <GeneratedLinks />,
               },
             ],

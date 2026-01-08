@@ -83,13 +83,14 @@ const TestResultModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            className="relative flex flex-col gap-2 rounded-md w-[300px] sm:w-[450px] m-h-[400px] bg-slate-500/30 backdrop-blur-xs border-2 border-slate-600"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
-            className="relative flex flex-col gap-2 rounded-md w-[300px] sm:w-[450px] m-h-[400px] bg-white"
+            transition={{ duration: 0.3 }}
           >
             <div className="px-4 py-2">
-              <h4 className="text-xl sm:text-2xl">
+              <h4 className="text-xl text-slate-300 sm:text-2xl">
                 Result for {testResultData?.candidateName}
               </h4>
             </div>
@@ -98,14 +99,14 @@ const TestResultModel = () => {
                 <Doughnut data={chartData} options={options} />
               </div>
               <div className="flex gap-2 text-left">
-                <p className="font-semibold">Score:</p>
+                <p className="font-semibold text-slate-300">Score:</p>
                 <p
                   className={`${
                     percentage < 65
                       ? "text-orange-500"
                       : percentage < 75
                       ? "text-yellow-500"
-                      : "text-green-700"
+                      : "text-green-500"
                   } font-semibold`}
                 >
                   {percentage}% {"("}
@@ -118,13 +119,13 @@ const TestResultModel = () => {
                 </p>
               </div>
             </div>
-            <div className="border-t border-t-zinc-300 py-2 px-4">
+            <div className="border-t-2 border-t-slate-600 py-2 px-4">
               <button
                 onClick={() => {
                   dispatch(toggleTestResultModelVisibility());
                   dispatch(setTestResultId(""));
                 }}
-                className="bg-slate-800 text-slate-300 px-4 py-2 rounded-md font-semibold cursor-pointer"
+                className="bg-slate-800 text-slate-300 border-2 border-slate-500 px-4 py-2 rounded-md font-semibold cursor-pointer"
               >
                 Got it!
               </button>

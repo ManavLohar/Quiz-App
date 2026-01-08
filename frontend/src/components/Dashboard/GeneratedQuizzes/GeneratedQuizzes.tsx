@@ -50,7 +50,7 @@ const GeneratedLinks = () => {
   return (
     <div className="flex flex-col p-3 h-full rounded-md overflow-hidden">
       <div className="sticky flex justify-between items-center top-0">
-        <h4 className="text-xl text-slate-300">Generated Links</h4>
+        <h4 className="text-xl text-slate-300">Generated Quizzes</h4>
       </div>
       <div className="h-max rounded-md bg-slate-600 p-4 mt-4 overflow-hidden overflow-x-auto w-full">
         {data?.data.length > 0 ? (

@@ -54,14 +54,15 @@ const LogoutConfirmationModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="relative flex flex-col gap-2 justify-between w-[300px] h-fit bg-slate-300 rounded-md"
+            className="relative flex flex-col gap-2 justify-between w-[300px] h-fit bg-slate-500/30 backdrop-blur-xs border-2 border-slate-600 rounded-md"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.3 }}
           >
             <div className="sticky top-0 px-4 pt-4">
-              <AiOutlineExclamationCircle className="text-6xl text-slate-700" />
-              <h4 className="text-lg sm:text-xl font-semibold">
+              <AiOutlineExclamationCircle className="text-6xl text-slate-400" />
+              <h4 className="text-lg text-slate-300 sm:text-xl font-semibold">
                 You want to logout?
               </h4>
             </div>
@@ -69,19 +70,19 @@ const LogoutConfirmationModel = () => {
               <div className="px-4 pb-4 flex gap-4">
                 <button
                   onClick={handleCancel}
-                  className="w-fit mt-2 px-4 py-1 bg-slate-300 border border-slate-800 rounded-md cursor-pointer font-semibold"
+                  className="flex justify-center items-center mt-2 w-18 sm:w-20 h-7 sm:h-8 text-slate-300 bg-slate-800 border-2 border-slate-500 rounded-md cursor-pointer font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleLogout}
-                  className={`flex justify-center items-center w-20 mt-2 px-4 py-1 ${
-                    isLoading ? "bg-slate-600" : "bg-slate-800"
-                  }  text-slate-300 rounded-md cursor-pointer font-semibold`}
+                  className={`flex justify-center items-center w-18 sm:w-20 h-7 sm:h-8 mt-2 ${
+                    isLoading ? "bg-slate-400" : "bg-slate-300"
+                  }  text-slate-800 border-2 border-slate-800 rounded-md cursor-pointer font-semibold`}
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <span className="animate-spin border-2 border-slate-300 border-t-transparent rounded-full w-4 h-4"></span>
+                    <span className="animate-spin border-2 border-slate-800 border-t-transparent rounded-full w-4 h-4"></span>
                   ) : (
                     "Logout"
                   )}
