@@ -173,7 +173,7 @@ const QuizArea = () => {
               <button
                 onClick={handleSubmitTest}
                 type="button"
-                className={`flex justify-center items-center border-2 border-slate-500 px-3 py-1 w-28 h-8 text-[16px] ${
+                className={`flex justify-center items-center border-2 border-slate-500 px-3 py-1 w-30 h-8 text-[16px] ${
                   isQuestionEnd || isCandidateAnsweredAllQuestions
                     ? "bg-slate-800"
                     : " bg-slate-600"
