@@ -17,7 +17,7 @@ export const adminRegister = async (req, res) => {
     if (isAdminExist) {
       return res.status(400).json({
         success: false,
-        message: "This user is already exist!",
+        message: "This email is already registered!",
       });
     }
     const hashedPassword = await bcrypt.hash(password, 8);
@@ -29,11 +29,10 @@ export const adminRegister = async (req, res) => {
       testId,
       questions,
     };
-    const admin = await AdminModel.create(data);
+    await AdminModel.create(data);
     return res.status(200).json({
       success: true,
-      message: "Admin created!",
-      admin,
+      message: "Account created!",
     });
   } catch (error) {
     console.log("Error from create admin: ", error);

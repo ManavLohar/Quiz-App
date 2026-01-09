@@ -4,14 +4,13 @@ import { IoIosArrowDown, IoMdArrowDropdown } from "react-icons/io";
 import { RxDashboard } from "react-icons/rx";
 import { FiLogOut } from "react-icons/fi";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   toggleLoginModelVisibility,
   toggleLogoutConfirmationModelVisibility,
 } from "../../redux/slices/quizSlice";
 import LogoutConfirmationModel from "../Modals/LogoutConfirmationModal";
-import type { RootState } from "../../redux/store";
-import AdminLoginModel from "../Modals/AdminLoginModal";
+import AdminSignInModel from "../Modals/AdminSignInModal";
 import quizLogo from "../../assets/quiz-logo.png";
 import GenerateLinkModel from "../Modals/GenerateLinkModal";
 import TestResultModel from "../Modals/TestResultModal";
@@ -24,15 +23,13 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { IoHomeOutline } from "react-icons/io5";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import AdminSignUpModal from "../Modals/AdminSignUpModal";
 
 gsap.registerPlugin(useGSAP);
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loginModelVisibility = useSelector(
-    (state: RootState) => state.quizSlice.loginModelVisibility
-  );
   const { data: adminData, isLoading } = useGetAdminQuery({});
 
   const [menuListToggle, setMenuListToggle] = useState<Boolean>(false);
@@ -62,9 +59,6 @@ const Navbar = () => {
           <img className="h-14" src={quizLogo} alt="" />
         </p>
       </div>
-      {/* <h1 className="flex-1 flex justify-center text-2xl uppercase text-slate-300">
-        Quiz Game
-      </h1> */}
       {/* For large devices */}
       <div className="hidden sm:flex-1 sm:flex justify-end">
         {adminData ? (
@@ -265,7 +259,8 @@ const Navbar = () => {
           Login
         </button>
       )}
-      {loginModelVisibility ? <AdminLoginModel /> : null}
+      <AdminSignUpModal />
+      <AdminSignInModel />
       <LogoutConfirmationModel />
       <QuestionModal />
       <QuestionDeleteConfirmationModel />

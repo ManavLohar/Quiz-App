@@ -14,3 +14,13 @@ export const adminLoginFormSchema = Yup.object({
   email: Yup.string().email().required("Email is required!"),
   password: Yup.string().required("Password is required!"),
 });
+
+export const adminSignUpFormSchema = Yup.object({
+  name: Yup.string()
+    .min(2, "Please type minimum 2 character!")
+    .required("Name is required!"),
+  email: Yup.string().email().required("Email is required!"),
+  password: Yup.string()
+    .min(6, "Minimum six character is required!")
+    .required("Password is required!"),
+});

@@ -11,6 +11,7 @@ export interface Questions {
   confirmationModelVisibility: boolean;
   logoutConfirmationModelVisibility: boolean;
   loginModelVisibility: boolean;
+  signUpModalVisibility: boolean;
   generateLinkModelVisibility: boolean;
   generatedLinkId: string;
   testResultModelVisibility: boolean;

@@ -7,6 +7,7 @@ const initialState: Questions = {
   confirmationModelVisibility: false,
   logoutConfirmationModelVisibility: false,
   loginModelVisibility: false,
+  signUpModalVisibility: false,
   generateLinkModelVisibility: false,
   generatedLinkId: "",
   testResultModelVisibility: false,
@@ -37,6 +38,9 @@ export const quizSlice = createSlice({
     },
     toggleLoginModelVisibility: (state) => {
       state.loginModelVisibility = !state.loginModelVisibility;
+    },
+    toggleSignUpModelVisibility: (state) => {
+      state.signUpModalVisibility = !state.signUpModalVisibility;
     },
     toggleGenerateLinkModelVisibility: (state, action) => {
       state.generateLinkModelVisibility = !state.generateLinkModelVisibility;
@@ -79,6 +83,7 @@ export const {
   toggleConfirmationModelVisibility,
   toggleLogoutConfirmationModelVisibility,
   toggleLoginModelVisibility,
+  toggleSignUpModelVisibility,
   toggleGenerateLinkModelVisibility,
   toggleTestResultModelVisibility,
   addQuestion,

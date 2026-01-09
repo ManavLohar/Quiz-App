@@ -3,11 +3,13 @@ import Navbar from "./components/Navbar/Navbar";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { useGetQuestionsQuery } from "./redux/slices/quizApiSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addQuestion } from "./redux/slices/quizSlice";
 import "react-loading-skeleton/dist/skeleton.css";
+import type { RootState } from "./redux/store";
 
 const App = () => {
+  const isSignIn = useSelector((state: RootState) => state.quizSlice.isSignIn);
   const { data, isSuccess } = useGetQuestionsQuery({});
   const dispatch = useDispatch();
   useEffect(() => {

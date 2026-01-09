@@ -22,7 +22,7 @@ import { verifyToken } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 
 export const adminRouter = router
-  .post("/register", adminRegister)
+  .post("/sign-up", adminRegister)
   .post("/login", adminLogin)
   .get("/", verifyToken, getAdmin)
   .post("/logout", verifyToken, logoutAdmin)

@@ -15,6 +15,16 @@ export const quizApiSlice = createApi({
     "GeneratedLinks",
   ],
   endpoints: (builder) => ({
+    adminSignUp: builder.mutation({
+      query: (data) => ({
+        url: "/admin/sign-up",
+        method: "POST",
+        body: data,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
     adminLogin: builder.mutation({
       query: (data) => ({
         url: "/admin/login",
@@ -172,6 +182,7 @@ export const quizApiSlice = createApi({
 });
 
 export const {
+  useAdminSignUpMutation,
   useAdminLoginMutation,
   useGetAdminQuery,
   useLogoutAdminMutation,
