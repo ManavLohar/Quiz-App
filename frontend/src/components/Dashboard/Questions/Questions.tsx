@@ -14,6 +14,8 @@ import {
 import type { QuestionType } from "../../../Schema";
 import toast from "react-hot-toast";
 import { getErrorMessage } from "../../../lib";
+import { Button } from "../../ReusableComponents/Button";
+import { motion } from "motion/react";
 
 const Questions = () => {
   const dispatch = useDispatch();
@@ -50,12 +52,17 @@ const Questions = () => {
   };
 
   return (
-    <div className="flex flex-col p-3 h-full rounded-md overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0, x: -25 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col p-3 h-full rounded-md overflow-hidden"
+    >
       <div className="sticky flex flex-col sm:flex-row sm:justify-between sm:items-center top-0">
         <h4 className="text-xl text-slate-300">Here is your Questions</h4>
         <div className="flex gap-2">
           {data?.data.length >= 5 ? (
-            <button
+            <Button
               onClick={() => handleGenerateLink()}
               className="flex justify-center items-center mt-2 w-30 h-8 sm:w-32 sm:h-10 bg-slate-300 rounded-md cursor-pointer font-semibold"
             >
@@ -66,10 +73,10 @@ const Questions = () => {
                   <span>Generate Link</span>
                 </>
               )}
-            </button>
+            </Button>
           ) : null}
 
-          <button
+          <Button
             onClick={() => {
               // dispatch(setQuestionId(""));
               dispatch(toggleQuestionModelVisibility());
@@ -78,7 +85,7 @@ const Questions = () => {
             className="w-30 h-8 sm:w-32 sm:h-10 mt-2 bg-slate-300 rounded-md cursor-pointer font-semibold"
           >
             Add Question
-          </button>
+          </Button>
         </div>
       </div>
       <div className="mt-4 flex flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:hidden">
@@ -92,7 +99,7 @@ const Questions = () => {
                   className="flex flex-col gap-4 w-full h-fit p-3 bg-slate-700 rounded-md"
                 >
                   <Skeleton count={1} width="100%" height={25} />
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Skeleton count={1} width="80px" height={24} />
                     <Skeleton count={1} width="80px" height={24} />
                     <Skeleton count={1} width="80px" height={24} />
@@ -115,7 +122,7 @@ const Questions = () => {
                 <h4 className="text-lg sm:text-xl text-slate-300">
                   {`Q.${index + 1}`} {question.question}
                 </h4>
-                <ol className="flex flex-wrap gap-3 list-decimal list-inside">
+                <ol className="flex flex-col sm:flex-row flex-wrap gap-3 list-[upper-alpha] list-inside">
                   {question?.options
                     ?.filter((item) => item.trim() !== "")
                     ?.map((item, index) => {
@@ -130,18 +137,18 @@ const Questions = () => {
                     })}
                 </ol>
                 <div className="flex gap-2 sm:gap-4">
-                  <button
+                  <Button
                     onClick={() => handleUpdateQuestion(question)}
                     className="w-fit text-sm sm:text-[16px] mt-2 px-3 sm:px-4 py-1 h-fit bg-slate-300 rounded-md cursor-pointer font-semibold"
                   >
                     Edit
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => handleDeleteQuestion(question)}
                     className="w-fit mt-2 text-sm sm:text-[16px] px-3 sm:px-4 py-1 h-fit bg-slate-900 text-white rounded-md cursor-pointer font-semibold"
                   >
                     Delete
-                  </button>
+                  </Button>
                 </div>
               </div>
             );
@@ -165,7 +172,7 @@ const Questions = () => {
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

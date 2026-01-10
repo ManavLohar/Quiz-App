@@ -13,6 +13,7 @@ import {
 import toast from "react-hot-toast";
 import type { RootState } from "../../redux/store";
 import { motion, AnimatePresence } from "motion/react";
+import { Button } from "../ReusableComponents/Button";
 
 const QuestionModal = () => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const QuestionModal = () => {
     <AnimatePresence>
       {questionModelVisibility ? (
         <motion.div
-          className="fixed inset-0 flex justify-center items-center bg-black/40"
+          className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -159,7 +160,7 @@ const QuestionModal = () => {
                   </p>
                 ) : null}
               </div>
-              <button
+              <Button
                 type="submit"
                 className="flex justify-center items-center gap-2 mt-2 w-15 h-8 bg-slate-800 text-slate-300 rounded-md cursor-pointer font-semibold border-2 border-slate-500"
                 disabled={isLoading || isUpdateLoading}
@@ -171,7 +172,7 @@ const QuestionModal = () => {
                     <span>{isEditMode ? "Edit" : "Add"}</span>
                   </>
                 )}
-              </button>
+              </Button>
             </form>
           </motion.div>
         </motion.div>

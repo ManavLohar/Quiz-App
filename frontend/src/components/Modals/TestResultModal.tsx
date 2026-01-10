@@ -14,6 +14,7 @@ import {
   toggleTestResultModelVisibility,
 } from "../../redux/slices/quizSlice";
 import { motion, AnimatePresence } from "motion/react";
+import { Button } from "../ReusableComponents/Button";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -77,7 +78,7 @@ const TestResultModel = () => {
     <AnimatePresence>
       {testResultModelVisibility ? (
         <motion.div
-          className="fixed inset-0 flex justify-center items-center bg-black/40"
+          className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -120,7 +121,7 @@ const TestResultModel = () => {
               </div>
             </div>
             <div className="border-t-2 border-t-slate-600 py-2 px-4">
-              <button
+              <Button
                 onClick={() => {
                   dispatch(toggleTestResultModelVisibility());
                   dispatch(setTestResultId(""));
@@ -128,7 +129,7 @@ const TestResultModel = () => {
                 className="bg-slate-800 text-slate-300 border-2 border-slate-500 px-4 py-2 rounded-md font-semibold cursor-pointer"
               >
                 Got it!
-              </button>
+              </Button>
             </div>
           </motion.div>
         </motion.div>

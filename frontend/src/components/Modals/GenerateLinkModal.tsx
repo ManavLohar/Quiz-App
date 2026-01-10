@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleGenerateLinkModelVisibility } from "../../redux/slices/quizSlice";
 import { motion, AnimatePresence } from "motion/react";
 import type { RootState } from "../../redux/store";
+import { Button } from "../ReusableComponents/Button";
 
 const GenerateLinkModel = () => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const GenerateLinkModel = () => {
     <AnimatePresence>
       {generateLinkModelVisibility ? (
         <motion.div
-          className="fixed inset-0 flex justify-center items-center bg-black/40"
+          className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -76,21 +77,21 @@ const GenerateLinkModel = () => {
                 className="border-2 border-slate-500 text-slate-300 p-1 rounded-md outline-none w-full"
                 readOnly
               />
-              <button
+              <Button
                 onClick={handleCopy}
                 className="bg-slate-800 text-slate-300 border-2 border-slate-500 px-3 py-1 rounded-md font-semibold cursor-pointer"
                 disabled={isCopied}
               >
                 {isCopied ? "Copied" : "Copy"}
-              </button>
+              </Button>
             </div>
             <div className="py-2 pb-4 px-4">
-              <button
+              <Button
                 onClick={() => dispatch(toggleGenerateLinkModelVisibility(""))}
                 className="bg-slate-800 text-slate-300 border-2 border-slate-500 px-3 py-1 rounded-md font-semibold cursor-pointer"
               >
                 Done
-              </button>
+              </Button>
             </div>
           </motion.div>
         </motion.div>

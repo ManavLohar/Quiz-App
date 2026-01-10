@@ -24,6 +24,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import AdminSignUpModal from "../Modals/AdminSignUpModal";
+import { Button } from "../ReusableComponents/Button";
 
 gsap.registerPlugin(useGSAP);
 
@@ -55,15 +56,18 @@ const Navbar = () => {
   return (
     <div className="relative z-10 flex items-center justify-between h-[10vh] w-full p-2 px-2 sm:px-4 bg-gray-800 border-b border-slate-600">
       <div className="flex-1 flex justify-left">
-        <p className="text-slate-300">
-          <img className="h-14" src={quizLogo} alt="" />
-        </p>
+        <img
+          onClick={() => navigate("/")}
+          className="h-14 cursor-pointer"
+          src={quizLogo}
+          alt=""
+        />
       </div>
       {/* For large devices */}
       <div className="hidden sm:flex-1 sm:flex justify-end">
         {adminData ? (
           <div className="relative">
-            <div
+            <Button
               onClick={() => setMenuListToggle(!menuListToggle)}
               className="flex gap-2 p-2 bg-slate-700 rounded-md items-center cursor-pointer"
             >
@@ -74,7 +78,7 @@ const Navbar = () => {
               <span>
                 <IoMdArrowDropdown className="text-slate-300" />
               </span>
-            </div>
+            </Button>
             {menuListToggle && (
               <div className="absolute flex flex-col border border-slate-600 items-start top-14 bg-slate-700/60 backdrop-blur-xs overflow-hidden w-45 right-0 rounded-md">
                 <button
@@ -119,12 +123,12 @@ const Navbar = () => {
             )}
           </div>
         ) : (
-          <button
+          <Button
             onClick={() => dispatch(toggleLoginModelVisibility())}
             className="bg-slate-300 px-3 py-1 rounded-md font-semibold cursor-pointer"
           >
             Login
-          </button>
+          </Button>
         )}
       </div>
 
@@ -141,7 +145,7 @@ const Navbar = () => {
           <AnimatePresence>
             {menuListToggle ? (
               <motion.div
-                className="fixed sm:hidden inset-0 flex justify-end items-center bg-black/40"
+                className="fixed sm:hidden inset-0 flex justify-end items-center bg-black/40 backdrop-blur-xs"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -165,7 +169,12 @@ const Navbar = () => {
                   </div>
                   <div className="flex h-full flex-col justify-between p-2">
                     <div className="flex justify-end">
-                      <img className="h-14" src={quizLogo} alt="" />
+                      <img
+                        onClick={() => navigate("/")}
+                        className="h-14 cursor-pointer"
+                        src={quizLogo}
+                        alt=""
+                      />
                     </div>
                     <div className="flex flex-col gap-2 items-end">
                       <h4
@@ -218,7 +227,7 @@ const Navbar = () => {
                         </AnimatePresence>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col mb-4 gap-1">
                       <div
                         onClick={() => setMenuListToggle(!menuListToggle)}
                         className="flex justify-end gap-2 rounded-md items-center cursor-pointer"

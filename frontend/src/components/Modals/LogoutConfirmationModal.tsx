@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
+import { Button } from "../ReusableComponents/Button";
 
 const LogoutConfirmationModel = () => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const LogoutConfirmationModel = () => {
     <AnimatePresence>
       {logoutConfirmationModelVisibility ? (
         <motion.div
-          className="fixed inset-0 flex justify-center items-center bg-black/40"
+          className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -68,13 +69,13 @@ const LogoutConfirmationModel = () => {
             </div>
             <div className="sticky bottom-0 flex mt-2">
               <div className="px-4 pb-4 flex gap-4">
-                <button
+                <Button
                   onClick={handleCancel}
                   className="flex justify-center items-center mt-2 w-18 sm:w-20 h-7 sm:h-8 text-slate-300 bg-slate-800 border-2 border-slate-500 rounded-md cursor-pointer font-semibold"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleLogout}
                   className={`flex justify-center items-center w-18 sm:w-20 h-7 sm:h-8 mt-2 ${
                     isLoading ? "bg-slate-400" : "bg-slate-300"
@@ -86,7 +87,7 @@ const LogoutConfirmationModel = () => {
                   ) : (
                     "Logout"
                   )}
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>

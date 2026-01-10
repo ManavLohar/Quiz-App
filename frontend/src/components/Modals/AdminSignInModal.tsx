@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getErrorMessage } from "../../lib";
 import { AnimatePresence, motion } from "motion/react";
 import type { RootState } from "../../redux/store";
+import { Button } from "../ReusableComponents/Button";
 
 const AdminSignInModel = () => {
   const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const AdminSignInModel = () => {
     <AnimatePresence>
       {loginModelVisibility ? (
         <motion.div
-          className="fixed top-0 left-0 h-screen w-full flex justify-center items-center bg-black/70"
+          className="fixed top-0 left-0 h-screen w-full flex justify-center items-center bg-black/70 backdrop-blur-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -112,7 +113,7 @@ const AdminSignInModel = () => {
                 ) : null}
               </div>
               <div className="px-4">
-                <button
+                <Button
                   type="submit"
                   className="flex justify-center items-center gap-2 mt-2 w-18 h-8 bg-slate-900 border-2 border-slate-500 text-white rounded-md cursor-pointer font-semibold"
                   disabled={isLoading}
@@ -124,7 +125,7 @@ const AdminSignInModel = () => {
                       <span>Sign In</span>
                     </>
                   )}
-                </button>
+                </Button>
                 <p className="text-xs font-semibold text-slate-300 mt-2">
                   If you don't have an account?{" "}
                   <span

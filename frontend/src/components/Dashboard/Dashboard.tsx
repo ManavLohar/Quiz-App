@@ -1,30 +1,9 @@
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [currentRoute, setCurrentRoute] = useState("questions");
-  const dashboardRouting = () => {
-    const navigationPoint = currentRoute.toLowerCase();
-    switch (navigationPoint) {
-      case "questions":
-        navigate("/dashboard/questions");
-        break;
-      // case "history":
-      //   navigate("/dashboard/test-history");
-      //   break;
-      case "generated quizzes":
-        navigate("/dashboard/generated-quizzes");
-        break;
-      default:
-        break;
-    }
-  };
-
-  useEffect(() => {
-    dashboardRouting();
-  }, [currentRoute]);
-
+  const { pathname } = useLocation();
+  const currentRoute = pathname.split("/")[2];
   return (
     <>
       <div className="flex h-[90vh] overflow-hidden">
@@ -35,18 +14,21 @@ const Dashboard = () => {
             </h4>
             <div className="mt-4">
               <ul className="list-none">
-                {["Questions", "Generated Quizzes"].map((item, index) => {
+                {[
+                  { navLink: "Questions", path: "questions" },
+                  { navLink: "Generated Quizzes", path: "generated-quizzes" },
+                ].map((item, index) => {
                   return (
                     <li
                       key={index}
-                      onClick={() => setCurrentRoute(item)}
+                      onClick={() => navigate(item.path)}
                       className={`text-white p-2 transition duration-500 cursor-pointer ${
-                        item.toLowerCase() === currentRoute.toLowerCase()
+                        item.path.toLowerCase() === currentRoute.toLowerCase()
                           ? "bg-slate-600"
                           : ""
                       } rounded-md`}
                     >
-                      {item}
+                      {item.navLink}
                     </li>
                   );
                 })}

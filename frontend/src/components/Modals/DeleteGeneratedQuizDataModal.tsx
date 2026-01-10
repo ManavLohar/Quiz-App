@@ -6,6 +6,7 @@ import { toggleDeleteGeneratedQuizDataVisibility } from "../../redux/slices/quiz
 import { useDeleteGeneratedTestLinkMutation } from "../../redux/slices/quizApiSlice";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { Button } from "../ReusableComponents/Button";
 
 const DeleteGeneratedQuizDataModel = () => {
   const dispatch = useDispatch();
@@ -44,13 +45,13 @@ const DeleteGeneratedQuizDataModel = () => {
     <AnimatePresence>
       {deleteGeneratedQuizDataVisibility ? (
         <motion.div
-          className="fixed inset-0 flex justify-center items-center bg-black/40"
+          className="fixed inset-0 flex justify-center items-center bg-black/40 backdrop-blur-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-500/30 backdrop-blur-xs rounded-md border-2 border-slate-600"
+            className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-500/30 backdrop-blur-xs rounded-md border-2 border-slate-500"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
@@ -64,13 +65,13 @@ const DeleteGeneratedQuizDataModel = () => {
             </div>
             <div className="sticky bottom-0 flex sm:mt-2">
               <div className="px-4 pb-4 flex gap-2 sm:gap-4">
-                <button
+                <Button
                   onClick={handleCancel}
                   className="flex justify-center items-center mt-2 w-18 sm:w-20 h-7 sm:h-8 text-slate-300 bg-slate-800 border-2 border-slate-500 rounded-md cursor-pointer font-semibold"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleDelete}
                   className={`flex justify-center items-center w-18 sm:w-20 h-7 sm:h-8 mt-2 ${
                     isLoading ? "bg-slate-400" : "bg-slate-300"
@@ -82,7 +83,7 @@ const DeleteGeneratedQuizDataModel = () => {
                   ) : (
                     "Delete"
                   )}
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>

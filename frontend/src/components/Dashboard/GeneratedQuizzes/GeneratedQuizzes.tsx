@@ -10,6 +10,7 @@ import {
 import { MdContentCopy, MdOutlineDeleteOutline } from "react-icons/md";
 import { IoMdDoneAll } from "react-icons/io";
 import { GiProgression } from "react-icons/gi";
+import { motion } from "motion/react";
 
 const GeneratedLinks = () => {
   const dispatch = useDispatch();
@@ -48,7 +49,12 @@ const GeneratedLinks = () => {
   };
 
   return (
-    <div className="flex flex-col p-3 h-full rounded-md overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0, x: -25 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col p-3 h-full rounded-md overflow-hidden"
+    >
       <div className="sticky flex justify-between items-center top-0">
         <h4 className="text-xl text-slate-300">Generated Quizzes</h4>
       </div>
@@ -119,7 +125,7 @@ const GeneratedLinks = () => {
           <p className="text-slate-300">There is no data.</p>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
