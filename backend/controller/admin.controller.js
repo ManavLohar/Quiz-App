@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { AdminModel, TestHistoryModel } from "../model/admin.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { CandidateModel } from "../model/candidate.model.js";
+import mongoose from "mongoose";
 
 export const adminRegister = async (req, res) => {
   try {
@@ -140,24 +141,25 @@ export const postQuestion = async (req, res) => {
   try {
     const { question, options, correct_answer } = req.body;
     const { email } = req.user;
-    const admin = await AdminModel.findOne({ email });
-    if (!admin) {
-      return res.status(404).json({
-        status: false,
-        message: "Admin not found!",
-      });
-    }
     const data = {
       question,
       options,
       correct_answer,
     };
-    admin.questions.push(data);
-    await admin.save();
+    const result = await AdminModel.updateOne(
+      { email },
+      { $push: { questions: data } },
+    );
+    if (result.matchCount === 0) {
+      return res.status(404).json({
+        status: false,
+        message: "Admin not found!",
+      });
+    }
     return res.status(200).json({
       success: true,
-      message: "Data fetched!",
-      data: admin.questions[admin.questions.length - 1],
+      message: "Operation Successfull!",
+      data,
     });
   } catch (error) {
     console.log("Error from post questions: ", error);
@@ -171,8 +173,8 @@ export const postQuestion = async (req, res) => {
 export const getQuestions = async (req, res) => {
   try {
     const { email } = req.user;
-    const admin = await AdminModel.findOne({ email });
-    if (!admin) {
+    const { questions } = await AdminModel.findOne({ email }, { questions: 1 });
+    if (!questions.length === 0) {
       return res.status(404).json({
         success: false,
         message: "Admin not found!",
@@ -181,7 +183,7 @@ export const getQuestions = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Questions fetched!",
-      data: admin.questions,
+      data: questions,
     });
   } catch (error) {
     console.log("Error from get questions: ", error);
@@ -217,7 +219,7 @@ export const updateQuestion = async (req, res) => {
       },
       {
         new: true,
-      }
+      },
     );
 
     if (!updatedAdmin) {
@@ -264,7 +266,7 @@ export const deleteQuestion = async (req, res) => {
           questions: { _id: questionId },
         },
       },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedAdmin) {
@@ -279,7 +281,7 @@ export const deleteQuestion = async (req, res) => {
     if (isDeletedQuestionExist) {
       return res.status(400).json({
         success: false,
-        message: "Question could not be deleted",
+        message: "Question could not be deleted!",
       });
     }
 
@@ -299,36 +301,27 @@ export const deleteQuestion = async (req, res) => {
 export const getQuestionsForCandidate = async (req, res) => {
   try {
     const { adminId, testId } = req.params;
-    const admin = await AdminModel.findOne({ _id: adminId });
-    const candidate = await CandidateModel.findOne({ testId });
-    if (!admin) {
-      return res.status(404).json({
-        success: false,
-        message: "Admin not found!",
-      });
-    }
-    if (!candidate) {
+    const result = await CandidateModel.aggregate([
+      { $match: { $and: [{ testId }, { adminId }] } },
+      {
+        $project: {
+          name: "$candidate.name",
+          status: "$candidate.status",
+          questions: 1,
+        },
+      },
+    ]);
+
+    if (!result.length) {
       return res.status(404).json({
         success: false,
         message: "Questions not found!",
       });
     }
-    const isTestIdMatch = testId === candidate.testId;
-    if (!testId || !isTestIdMatch) {
-      return res.status(400).json({
-        success: false,
-        message: "Currently no questions here!",
-      });
-    }
-    const candidateData = {
-      name: candidate.candidate.name,
-      status: candidate.candidate.status,
-      questions: candidate.questions,
-    };
     return res.status(200).json({
       success: true,
       message: "Questions fetched!",
-      data: candidateData,
+      data: result[0],
     });
   } catch (error) {
     console.log("Error in getQuestionsForCandidate: ", error);
@@ -342,10 +335,22 @@ export const getQuestionsForCandidate = async (req, res) => {
 export const postCandidateName = async (req, res) => {
   try {
     const { name, testId } = req.body;
-    const candidateData = await CandidateModel.findOne({ testId });
-    candidateData.candidate.name = name;
-    candidateData.candidate.status = "in-progress";
-    await candidateData.save();
+    const candidateData = await CandidateModel.updateOne(
+      { testId },
+      {
+        $set: {
+          "candidate.name": name,
+          "candidate.status": "in-progress",
+        },
+      },
+    );
+
+    if (candidateData.matchCount === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Quiz not found!",
+      });
+    }
     return res.status(200).json({
       success: true,
       message: "Your name is successfully posted!",
@@ -369,7 +374,7 @@ export const postCheckAnswer = async (req, res) => {
       },
       {
         "questions.$": 1,
-      }
+      },
     );
     if (!candidateData) {
       return res.status(404).json({
@@ -391,7 +396,7 @@ export const postCheckAnswer = async (req, res) => {
           "questions.$.status": status,
           "questions.$.attempt": true,
         },
-      }
+      },
     );
     return res.status(200).json({
       success: true,
@@ -443,15 +448,17 @@ export const postGenerateLinkForTest = async (req, res) => {
 export const deleteGeneratedTestLink = async (req, res) => {
   try {
     const { testId } = req.params;
-    const candidateData = await CandidateModel.findOne({ testId });
-    if (!candidateData) {
+    const candidateData = await CandidateModel.deleteOne({ testId });
+
+    if (candidateData.matchCount === 0) {
       return res.status(404).json({
         success: false,
         message: "Admin not found!",
       });
     }
-    await CandidateModel.deleteOne({ testId });
+
     await TestHistoryModel.deleteOne({ testId });
+
     return res.status(200).json({
       success: true,
       message: "Record deleted successfully!",

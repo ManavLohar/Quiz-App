@@ -6,17 +6,27 @@ import {
   toggleConfirmationModelVisibility,
 } from "../../redux/slices/quizSlice";
 import { useDeleteQuestionMutation } from "../../redux/slices/quizApiSlice";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "../ReusableComponents/Button";
+import { useCloseOnOutsideOrEsc } from "../../hooks/useCloseOnOutsideOrEsc";
 
 const QuestionDeleteConfirmationModel = () => {
   const dispatch = useDispatch();
+  const questionDeleteConfirmationModalRef = useRef<HTMLDivElement | null>(
+    null,
+  );
   const question = useSelector((state: RootState) => state.quizSlice.question);
   const confirmationModelVisibility = useSelector(
-    (state: RootState) => state.quizSlice.confirmationModelVisibility
+    (state: RootState) => state.quizSlice.confirmationModelVisibility,
   );
+
+  useCloseOnOutsideOrEsc({
+    ref: questionDeleteConfirmationModalRef,
+    onClose: () => dispatch(toggleConfirmationModelVisibility()),
+    enabled: confirmationModelVisibility,
+  });
 
   const handleCancel = () => {
     dispatch(toggleConfirmationModelVisibility());
@@ -56,6 +66,7 @@ const QuestionDeleteConfirmationModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={questionDeleteConfirmationModalRef}
             className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-500/30 backdrop-blur-xs rounded-md border-2 border-slate-600"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

@@ -5,16 +5,25 @@ import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { toggleDeleteGeneratedQuizDataVisibility } from "../../redux/slices/quizSlice";
 import { useDeleteGeneratedTestLinkMutation } from "../../redux/slices/quizApiSlice";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "../ReusableComponents/Button";
+import { useCloseOnOutsideOrEsc } from "../../hooks/useCloseOnOutsideOrEsc";
 
 const DeleteGeneratedQuizDataModel = () => {
   const dispatch = useDispatch();
+  const deleteGeneratedQuizDataModalRef = useRef<HTMLDivElement | null>(null);
   const deleteGeneratedQuizDataVisibility = useSelector(
-    (state: RootState) => state.quizSlice.deleteGeneratedQuizDataVisibility
+    (state: RootState) => state.quizSlice.deleteGeneratedQuizDataVisibility,
   );
+
+  useCloseOnOutsideOrEsc({
+    ref: deleteGeneratedQuizDataModalRef,
+    onClose: () => dispatch(toggleDeleteGeneratedQuizDataVisibility("")),
+    enabled: deleteGeneratedQuizDataVisibility,
+  });
+
   const generatedLinkId = useSelector(
-    (state: RootState) => state.quizSlice.generatedLinkId
+    (state: RootState) => state.quizSlice.generatedLinkId,
   );
 
   const handleCancel = () => {
@@ -51,6 +60,7 @@ const DeleteGeneratedQuizDataModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={deleteGeneratedQuizDataModalRef}
             className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-500/30 backdrop-blur-xs rounded-md border-2 border-slate-500"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

@@ -9,6 +9,11 @@ export const getErrorMessage = (error: any): string => {
 
 export const extractDate = (value: string): string => {
   const date = new Date(value);
-  const fullDate = date.toLocaleDateString("en-GB");
+  const fullDate = new Intl.DateTimeFormat("en-In", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
   return fullDate;
 };

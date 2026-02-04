@@ -5,19 +5,28 @@ import {
   quizApiSlice,
   useLogoutAdminMutation,
 } from "../../redux/slices/quizApiSlice";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "../ReusableComponents/Button";
+import { useCloseOnOutsideOrEsc } from "../../hooks/useCloseOnOutsideOrEsc";
 
 const LogoutConfirmationModel = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const logoutConfirmationModalRef = useRef<HTMLDivElement | null>(null);
   const logoutConfirmationModelVisibility = useSelector(
-    (state: RootState) => state.quizSlice.logoutConfirmationModelVisibility
+    (state: RootState) => state.quizSlice.logoutConfirmationModelVisibility,
   );
+
+  useCloseOnOutsideOrEsc({
+    ref: logoutConfirmationModalRef,
+    onClose: () => dispatch(toggleLogoutConfirmationModelVisibility()),
+    enabled: logoutConfirmationModelVisibility,
+  });
+
   const handleCancel = () => {
     dispatch(toggleLogoutConfirmationModelVisibility());
   };
@@ -55,6 +64,7 @@ const LogoutConfirmationModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={logoutConfirmationModalRef}
             className="relative flex flex-col gap-2 justify-between w-[300px] h-fit bg-slate-500/30 backdrop-blur-xs border-2 border-slate-600 rounded-md"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

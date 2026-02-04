@@ -27,12 +27,12 @@ const QuizArea = () => {
   });
 
   const questionIndex = useSelector(
-    (state: RootState) => state.quizSlice.questionNumber
+    (state: RootState) => state.quizSlice.questionNumber,
   );
   const questionLength = candidateData?.data.questions.length;
   const isQuestionEnd = questionLength === questionIndex + 1 ? true : false;
   const isCandidateAnsweredAllQuestions = candidateData?.data.questions.every(
-    (item: any) => item.status !== "unattended"
+    (item: any) => item.status !== "unattended",
   );
 
   const [postCandidateName] = usePostCandidateNameMutation();
@@ -53,7 +53,7 @@ const QuizArea = () => {
           data: {
             message: "Please provide atleast two or more letter for name!",
           },
-        })
+        }),
       );
     }
   };
@@ -62,7 +62,7 @@ const QuizArea = () => {
 
   const handleOptionClick = async (
     candidateAnswer: string,
-    questionId: string
+    questionId: string,
   ) => {
     try {
       const data = { candidateAnswer, testId, questionId, adminId };
@@ -134,24 +134,12 @@ const QuizArea = () => {
                     onClick={() => {
                       handleOptionClick(
                         item,
-                        candidateData?.data.questions[questionIndex]._id
+                        candidateData?.data.questions[questionIndex]._id,
                       );
                       // setCorrectAnswer(item);
                     }}
                     className={`p-1 sm:p-2 border-2 border-slate-600 rounded text-[12px] text-slate-300 sm:text-sm cursor-pointer text-left
                    ${
-                     // candidateData?.data.questions[questionIndex].attempt ===
-                     //  "unattended"
-                     //    ? "border-slate-400"
-                     //    : item ===
-                     //      candidateData?.data.questions[questionIndex]
-                     //        .correct_answer
-                     //    ? "border-green-500 bg-[#50ff5036]"
-                     //    : item ===
-                     //      candidateData?.data.questions[questionIndex]
-                     //        .candidateAnswer
-                     //    ? "border-red-500 bg-[#ff00001a]"
-                     //    : "border-slate-400"
                      candidateData?.data.questions[questionIndex]
                        .candidateAnswer === item
                        ? "border-blue-500 bg-slate-600"
@@ -165,7 +153,7 @@ const QuizArea = () => {
                     {item}
                   </button>
                 );
-              }
+              },
             )}
           </ul>
           <div className="flex justify-between items-center">

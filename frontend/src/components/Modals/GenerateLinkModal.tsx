@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IoIosLink } from "react-icons/io";
 import { MdOutlineInfo } from "react-icons/md";
 import { useGetAdminQuery } from "../../redux/slices/quizApiSlice";
@@ -7,14 +7,23 @@ import { toggleGenerateLinkModelVisibility } from "../../redux/slices/quizSlice"
 import { motion, AnimatePresence } from "motion/react";
 import type { RootState } from "../../redux/store";
 import { Button } from "../ReusableComponents/Button";
+import { useCloseOnOutsideOrEsc } from "../../hooks/useCloseOnOutsideOrEsc";
 
 const GenerateLinkModel = () => {
   const dispatch = useDispatch();
+  const generateLinkModalRef = useRef<HTMLDivElement | null>(null);
   const generateLinkModelVisibility = useSelector(
-    (state: RootState) => state.quizSlice.generateLinkModelVisibility
+    (state: RootState) => state.quizSlice.generateLinkModelVisibility,
   );
+
+  useCloseOnOutsideOrEsc({
+    ref: generateLinkModalRef,
+    onClose: () => dispatch(toggleGenerateLinkModelVisibility("")),
+    enabled: generateLinkModelVisibility,
+  });
+
   const generatedLinkId = useSelector(
-    (state: RootState) => state.quizSlice.generatedLinkId
+    (state: RootState) => state.quizSlice.generatedLinkId,
   );
   const [isInfoBox, setIsInfoBox] = useState(false);
   const { data } = useGetAdminQuery({});
@@ -43,6 +52,7 @@ const GenerateLinkModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={generateLinkModalRef}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}

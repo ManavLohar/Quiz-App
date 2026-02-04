@@ -14,6 +14,8 @@ import toast from "react-hot-toast";
 import type { RootState } from "../../redux/store";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "../ReusableComponents/Button";
+import { useCloseOnOutsideOrEsc } from "../../hooks/useCloseOnOutsideOrEsc";
+import { useRef } from "react";
 
 const QuestionModal = () => {
   const dispatch = useDispatch();
@@ -24,11 +26,18 @@ const QuestionModal = () => {
     correct_answer: "",
   };
   const questionModelVisibility = useSelector(
-    (state: RootState) => state.quizSlice.questionModelVisibility
+    (state: RootState) => state.quizSlice.questionModelVisibility,
   );
   const selectedQuestion = useSelector(
-    (state: RootState) => state.quizSlice.question
+    (state: RootState) => state.quizSlice.question,
   );
+  const questionModalRef = useRef<HTMLDivElement | null>(null);
+
+  useCloseOnOutsideOrEsc({
+    ref: questionModalRef,
+    onClose: () => dispatch(toggleQuestionModelVisibility()),
+    enabled: questionModelVisibility,
+  });
 
   const isEditMode = Boolean(selectedQuestion?._id);
 
@@ -69,6 +78,7 @@ const QuestionModal = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={questionModalRef}
             className="flex flex-col h-fit w-[300px] sm:w-[450px] bg-slate-500/30 backdrop-blur-xs shadow-2xl border-2 border-slate-600 rounded-md p-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

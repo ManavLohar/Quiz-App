@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { CiLogin } from "react-icons/ci";
 import { adminLoginFormSchema } from "../../Schema/formValidationSchema";
 import { useAdminLoginMutation } from "../../redux/slices/quizApiSlice";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { TfiClose } from "react-icons/tfi";
 import {
@@ -14,13 +14,21 @@ import { getErrorMessage } from "../../lib";
 import { AnimatePresence, motion } from "motion/react";
 import type { RootState } from "../../redux/store";
 import { Button } from "../ReusableComponents/Button";
+import { useCloseOnOutsideOrEsc } from "../../hooks/useCloseOnOutsideOrEsc";
 
 const AdminSignInModel = () => {
   const dispatch = useDispatch();
+  const signInModelRef = useRef<HTMLDivElement | null>(null);
 
   const loginModelVisibility = useSelector(
-    (state: RootState) => state.quizSlice.loginModelVisibility
+    (state: RootState) => state.quizSlice.loginModelVisibility,
   );
+
+  useCloseOnOutsideOrEsc({
+    ref: signInModelRef,
+    onClose: () => dispatch(toggleLoginModelVisibility()),
+    enabled: loginModelVisibility,
+  });
 
   const initialValues = {
     email: "",
@@ -60,6 +68,7 @@ const AdminSignInModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={signInModelRef}
             className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-500/30 backdrop-blur-xs border-2 border-slate-500 rounded-md"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

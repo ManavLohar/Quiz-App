@@ -13,7 +13,7 @@ app.use(
   cors({
     origin: ["http://localhost:5173", "https://quiz-app-f8lo.vercel.app"],
     credentials: true,
-  })
+  }),
 );
 app.use(cookieParser());
 app.use(async (req, res, next) => {

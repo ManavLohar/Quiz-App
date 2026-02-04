@@ -11,16 +11,18 @@ import { MdContentCopy, MdOutlineDeleteOutline } from "react-icons/md";
 import { IoMdDoneAll } from "react-icons/io";
 import { GiProgression } from "react-icons/gi";
 import { motion } from "motion/react";
+import { Button } from "../../ReusableComponents/Button";
+import toast from "react-hot-toast";
 
 const GeneratedLinks = () => {
   const dispatch = useDispatch();
   const { data } = useGetGeneratedTestLinksQuery({});
   const testStatusCss = (status: string) => {
     return status === "completed"
-      ? "bg-green-400/30 border-green-700 text-green-900"
+      ? "bg-green-400/30 border-green-700 text-green-400"
       : status === "in-progress"
-      ? "bg-orange-300/30 border-orange-700 text-orange-900"
-      : "bg-gray-400/30 border-gray-700 text-gray-900";
+        ? "bg-orange-300/30 border-orange-700 text-orange-400"
+        : "bg-gray-400/30 border-gray-700 text-gray-400";
   };
 
   const [copiedTestId, setCopiedTestId] = useState<string | null>(null);
@@ -30,6 +32,7 @@ const GeneratedLinks = () => {
       .writeText(generatedLink)
       .then(() => {
         setCopiedTestId(testId);
+        toast.success("Link Copied!");
         setTimeout(() => {
           setCopiedTestId(null);
         }, 2000);
@@ -58,9 +61,9 @@ const GeneratedLinks = () => {
       <div className="sticky flex justify-between items-center top-0">
         <h4 className="text-xl text-slate-300">Generated Quizzes</h4>
       </div>
-      <div className="h-max rounded-md bg-slate-600 p-4 mt-4 overflow-hidden overflow-x-auto w-full">
+      <div className="h-max rounded-md border-slate-600 mt-4 overflow-hidden overflow-x-auto w-full">
         {data?.data.length > 0 ? (
-          <table className="w-full table-fixed rounded-md min-w-[800px]">
+          <table className="w-full table-fixed border-8 border-t-2 border-slate-800 rounded-md min-w-[1100px]">
             <thead className="text-left bg-slate-800 text-slate-300">
               <tr>
                 <th className="p-2">Date</th>
@@ -70,7 +73,7 @@ const GeneratedLinks = () => {
                 <th className="p-2">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-slate-300">
+            <tbody className=" text-white">
               {data?.data.map((item: any, index: number) => {
                 return (
                   <tr key={index}>
@@ -80,7 +83,7 @@ const GeneratedLinks = () => {
                     <td>
                       <p
                         className={`w-fit text-[14px] font-semibold px-2 py-1 capitalize rounded-4xl border ${testStatusCss(
-                          item.candidate.status
+                          item.candidate.status,
                         )}`}
                       >
                         {item.candidate.status}
@@ -88,33 +91,41 @@ const GeneratedLinks = () => {
                     </td>
                     <td className="p-2 flex gap-2">
                       {item.candidate.status !== "completed" ? (
-                        <button
+                        <Button
                           onClick={() =>
                             handleCopyLink(item.adminId, item.testId)
                           }
-                          className="flex justify-center items-center h-10 w-10 border-2 border-cyan-700 rounded-md cursor-pointer text-cyan-700"
+                          className="flex gap-2 justify-center items-center p-2 bg-cyan-700 text-white rounded-md cursor-pointer"
                           disabled={copiedTestId === item.testId}
                         >
                           {copiedTestId === item.testId ? (
-                            <IoMdDoneAll size={20} />
+                            <>
+                              <IoMdDoneAll size={20} />
+                              Copied
+                            </>
                           ) : (
-                            <MdContentCopy size={20} />
+                            <>
+                              <MdContentCopy size={20} />
+                              Copy
+                            </>
                           )}
-                        </button>
+                        </Button>
                       ) : (
-                        <button
+                        <Button
                           onClick={() => handleTestResult(item.testId)}
-                          className="flex justify-center items-center h-10 w-10 border-2 border-green-800 text-green-800 rounded-md cursor-pointer"
+                          className="flex gap-2 justify-center items-center w-fit p-2 bg-green-800 text-white rounded-md cursor-pointer"
                         >
                           <GiProgression size={20} />
-                        </button>
+                          Result
+                        </Button>
                       )}
-                      <button
+                      <Button
                         onClick={() => handleDelete(item.testId)}
-                        className="flex justify-center items-center h-10 w-10 border-2 border-red-700 text-red-700 rounded-md cursor-pointer"
+                        className="flex gap-2 justify-center items-center w-fit p-2 bg-red-800 text-white rounded-md cursor-pointer"
                       >
                         <MdOutlineDeleteOutline size={24} />
-                      </button>
+                        Delete
+                      </Button>
                     </td>
                   </tr>
                 );

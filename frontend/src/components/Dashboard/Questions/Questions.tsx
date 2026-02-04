@@ -58,7 +58,7 @@ const Questions = () => {
       transition={{ duration: 0.3 }}
       className="flex flex-col p-3 h-full rounded-md overflow-hidden"
     >
-      <div className="sticky flex flex-col sm:flex-row sm:justify-between sm:items-center top-0">
+      <div className="sticky flex flex-col sm:flex-row sm:justify-between sm:items-center pb-3 top-0 border-b-2 border-b-slate-700">
         <h4 className="text-xl text-slate-300">Here is your Questions</h4>
         <div className="flex gap-2">
           {data?.data.length >= 5 ? (
@@ -88,7 +88,7 @@ const Questions = () => {
           </Button>
         </div>
       </div>
-      <div className="mt-4 flex flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:hidden">
+      <div className="flex pt-4 flex-col gap-4 overflow-y-auto [&::-webkit-scrollbar]:hidden">
         {isLoading &&
           Array(3)
             .fill("")
@@ -117,7 +117,7 @@ const Questions = () => {
             return (
               <div
                 key={index}
-                className="flex flex-col gap-2 p-3 bg-slate-700 rounded-md"
+                className="flex flex-col gap-2 p-3 sm:p-6 bg-none border-2 border-slate-700 rounded-md"
               >
                 <h4 className="text-lg sm:text-xl text-slate-300">
                   {`Q.${index + 1}`} {question.question}
@@ -145,7 +145,7 @@ const Questions = () => {
                   </Button>
                   <Button
                     onClick={() => handleDeleteQuestion(question)}
-                    className="w-fit mt-2 text-sm sm:text-[16px] px-3 sm:px-4 py-1 h-fit bg-slate-900 text-white rounded-md cursor-pointer font-semibold"
+                    className="w-fit mt-2 text-sm sm:text-[16px] px-3 sm:px-4 py-1 h-fit bg-slate-900 border border-slate-500 text-white rounded-md cursor-pointer font-semibold"
                   >
                     Delete
                   </Button>

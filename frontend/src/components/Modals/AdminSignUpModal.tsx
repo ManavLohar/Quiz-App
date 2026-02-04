@@ -13,13 +13,22 @@ import { getErrorMessage } from "../../lib";
 import { AnimatePresence, motion } from "motion/react";
 import type { RootState } from "../../redux/store";
 import { Button } from "../ReusableComponents/Button";
+import { useCloseOnOutsideOrEsc } from "../../hooks/useCloseOnOutsideOrEsc";
+import { useRef } from "react";
 
 const AdminSignUpModal = () => {
   const dispatch = useDispatch();
+  const signUpModalRef = useRef<HTMLDivElement | null>(null);
 
   const signUpModalVisibility = useSelector(
-    (state: RootState) => state.quizSlice.signUpModalVisibility
+    (state: RootState) => state.quizSlice.signUpModalVisibility,
   );
+
+  useCloseOnOutsideOrEsc({
+    ref: signUpModalRef,
+    onClose: () => dispatch(toggleSignUpModelVisibility()),
+    enabled: signUpModalVisibility,
+  });
 
   const initialValues = {
     name: "",
@@ -56,6 +65,7 @@ const AdminSignUpModal = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={signUpModalRef}
             className="relative flex flex-col gap-2 justify-between w-[300px] sm:w-[400px] h-fit bg-slate-500/30 backdrop-blur-xs border-2 border-slate-600 rounded-md"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}

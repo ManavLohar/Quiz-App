@@ -15,20 +15,30 @@ import {
 } from "../../redux/slices/quizSlice";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "../ReusableComponents/Button";
+import { useCloseOnOutsideOrEsc } from "../../hooks/useCloseOnOutsideOrEsc";
+import { useRef } from "react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const TestResultModel = () => {
   const dispatch = useDispatch();
+  const testResultModalRef = useRef<HTMLDivElement | null>(null);
   const testResultId = useSelector(
-    (state: RootState) => state.quizSlice.testResultId
+    (state: RootState) => state.quizSlice.testResultId,
   );
   const testResultModelVisibility = useSelector(
-    (state: RootState) => state.quizSlice.testResultModelVisibility
+    (state: RootState) => state.quizSlice.testResultModelVisibility,
   );
+
+  useCloseOnOutsideOrEsc({
+    ref: testResultModalRef,
+    onClose: () => dispatch(toggleTestResultModelVisibility()),
+    enabled: testResultModelVisibility,
+  });
+
   const { data } = useGetTestHistoryQuery(
     { testId: testResultId },
-    { skip: !testResultId }
+    { skip: !testResultId },
   );
   const testResultData = data?.data;
   let incorrect = testResultData?.totalQuestions.incorrect;
@@ -36,7 +46,7 @@ const TestResultModel = () => {
   let unattended = testResultData?.totalQuestions.unattended;
   let percentage = Math.round(
     (correct?.count * 100) /
-      (correct?.count + incorrect?.count + unattended?.count)
+      (correct?.count + incorrect?.count + unattended?.count),
   );
 
   const chartData = {
@@ -84,6 +94,7 @@ const TestResultModel = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
+            ref={testResultModalRef}
             className="relative flex flex-col gap-2 rounded-md w-[300px] sm:w-[450px] m-h-[400px] bg-slate-500/30 backdrop-blur-xs border-2 border-slate-600"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -106,16 +117,16 @@ const TestResultModel = () => {
                     percentage < 65
                       ? "text-orange-500"
                       : percentage < 75
-                      ? "text-yellow-500"
-                      : "text-green-500"
+                        ? "text-yellow-500"
+                        : "text-green-500"
                   } font-semibold`}
                 >
                   {percentage}% {"("}
                   {percentage < 65
                     ? "Need improvement"
                     : percentage < 75
-                    ? "Good"
-                    : "Excellent"}
+                      ? "Good"
+                      : "Excellent"}
                   {")"}
                 </p>
               </div>
